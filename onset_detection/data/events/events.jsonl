@@ -1,0 +1,6 @@
+{"ts":1758690416.4961314,"event_type":"onset_candidate","stock_code":"005930","score":2.3,"extra":{"spread":0.05,"volume":1000},"saved_at":1758690416.4961314}
+{"ts":1758690421.4961314,"event_type":"onset_confirmed","stock_code":"005930","score":3.1,"extra":{"spread":0.03,"volume":2500},"saved_at":1758690416.4971318}
+{"ts":1758690426.4961314,"event_type":"onset_confirmed","stock_code":"000660","score":2.8,"extra":{"spread":0.04,"volume":1800},"saved_at":1758690416.4971318}
+{"ts":1758690476.4961314,"event_type":"refractory_enter","stock_code":"005930","duration":120,"reason":"confirmed_onset_completed","saved_at":1758690416.4971318}
+{"ts":1758690481.4961314,"event_type":"refractory_enter","stock_code":"000660","duration":90,"reason":"confirmed_onset_completed","saved_at":1758690416.4981322}
+{"ts":1704067230000.0,"event_type":"onset_confirmed","stock_code":"005930","confirmed_from":1704067210000.0,"evidence":{"axes":["price","volume","friction"],"ret_1s":0.0020311790555895344,"z_vol_1s":2.5958614994682394,"spread":0.018140441301084293,"microprice_slope":0.6819010120688697},"saved_at":1758695214.0352232}

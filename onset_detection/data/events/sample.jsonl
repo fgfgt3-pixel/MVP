@@ -1,0 +1,7 @@
+{"ts": 1704067210000, "event_type": "onset_candidate", "stock_code": "005930", "score": 1.2, "extra": {}}
+{"ts": 1704067215000, "event_type": "onset_confirmed", "stock_code": "005930", "score": 2.5, "extra": {}}
+{"ts": 1704067305000, "event_type": "onset_candidate", "stock_code": "005930", "score": 1.5, "extra": {}}
+{"ts": 1704067310000, "event_type": "onset_confirmed", "stock_code": "005930", "score": 2.8, "extra": {}}
+{"ts": 1704067250000, "event_type": "onset_confirmed", "stock_code": "005930", "score": 1.9, "extra": {}}
+{"ts": 1704067405000, "event_type": "onset_candidate", "stock_code": "000660", "score": 1.7, "extra": {}}
+{"ts": 1704067410000, "event_type": "onset_confirmed", "stock_code": "000660", "score": 3.2, "extra": {}}

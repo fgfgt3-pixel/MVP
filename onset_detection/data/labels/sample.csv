@@ -1,0 +1,4 @@
+timestamp_start,timestamp_end,stock_code,label_type,description
+1704067205000,1704067225000,005930,onset,Strong price surge with volume spike
+1704067300000,1704067320000,005930,onset,Second onset pattern detected
+1704067400000,1704067430000,000660,onset,Different stock onset example

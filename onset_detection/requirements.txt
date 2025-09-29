@@ -1,0 +1,25 @@
+# Core packages (Windows compatible)
+pandas>=2.0
+numpy>=1.24
+matplotlib>=3.7
+pyyaml>=6.0
+pydantic>=2.0
+
+# Configuration and environment
+python-dotenv>=1.0
+
+# Optional visualization
+seaborn>=0.12
+
+# Testing
+pytest>=7.0
+pytest-cov>=4.0
+
+# Note: SciPy and scikit-learn require pre-compiled wheels or conda installation
+# Install separately if needed:
+# pip install scipy scikit-learn --only-binary=all
+# or use conda: conda install scipy scikit-learn
+
+# Jupyter support (optional)
+# jupyter>=1.0
+# ipykernel>=6.25

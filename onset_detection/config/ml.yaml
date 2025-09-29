@@ -1,0 +1,47 @@
+# ML Training and Labeling Configuration
+
+ml:
+  # Labeling parameters
+  label:
+    span_s: 60                    # Positive label duration after onset (seconds)
+    max_span_s: 90                # Maximum span duration limit
+    forecast_s: 10                # Forecast horizon for early detection (seconds)
+    pre_buffer_s: 30              # Minimum negative buffer before onset
+
+  # Training parameters
+  train:
+    model_type: lightgbm          # lightgbm | logistic | xgboost
+    n_estimators: 500
+    learning_rate: 0.05
+    max_depth: -1                 # No limit for LightGBM
+    test_size: 0.2                # Train/test split ratio
+    random_state: 42
+    class_weight: balanced        # Handle class imbalance
+
+    # Validation
+    cv_folds: 5                   # Cross-validation folds
+    early_stopping_rounds: 50
+
+  # Feature configuration
+  features:
+    # Columns to drop from training
+    drop_columns:
+      - stock_code
+      - ts
+      - ts_sec
+      - epoch_sec
+
+    # Feature selection (optional)
+    max_features: null            # null = use all, int = limit number
+    feature_selection_method: null # null | rfe | stability
+
+  # Model output paths
+  paths:
+    models: models/
+    reports: reports/ml/
+    feature_importance: reports/ml/feature_importance.csv
+
+  # Logging
+  logging:
+    level: INFO
+    log_training_metrics: true

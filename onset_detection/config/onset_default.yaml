@@ -1,0 +1,137 @@
+# Onset Detection Default Configuration
+
+paths:
+  data_raw: data/raw
+  data_clean: data/clean
+  data_features: data/features
+  data_events: data/events
+  data_labels: data/labels
+  reports: reports
+  plots: reports/plots
+  logs: logs
+
+onset:
+  refractory_s: 120
+  confirm_window_s: 20
+  score_threshold: 2.0
+  
+  # Scoring weights (Speed + Participation + Friction)
+  weights:
+    speed: 0.4
+    participation: 0.4
+    friction: 0.2
+  
+  # Thresholds (session-adaptive percentiles)
+  thresholds:
+    percentile: 95
+    min_volume_z: 1.5
+    min_return_pct: 0.005
+
+# Feature computation windows (seconds)
+features:
+  short_window: 60    # 1 minute
+  long_window: 1800   # 30 minutes
+  
+  # Rolling statistics
+  rolling:
+    vol_window: 300   # 5 minutes for volume normalization
+    price_window: 600 # 10 minutes for price momentum
+
+# Time configuration
+time:
+  epoch_unit: "ms"          # s | ms | us | ns
+  timezone: "Asia/Seoul"
+
+# Volume configuration
+volume:
+  is_cumulative: true       # Whether CSV volume is cumulative
+  roll_window_s: 300        # z_vol_1s rolling window (seconds)
+
+# Session configuration
+session:
+  timezone: Asia/Seoul
+  market_open: "09:00"
+  market_close: "15:30"
+  lunch_start: "12:00"
+  lunch_end: "13:00"
+
+# Visualization settings
+visual:
+  mode: point           # point | span
+  show_stages: true     # candidate/confirm/confirmed stages
+  debug_labels: false
+  timeline_panel: true  # Event Timeline panel
+
+# Segmenter settings (for span mode)
+segmenter:
+  dd_stop_pct: 0.012    # 1.2% drawdown to end segment
+  vol_norm_z: 1.0       # volume z-score return threshold  
+  max_hold_s: 180       # safety: max segment duration
+
+# Detection settings
+detection:
+  score_threshold: 2.0
+  vol_z_min: 2.0
+  ticks_min: 2
+  weights:
+    ret: 1.0
+    accel: 1.0
+    z_vol: 1.0
+    ticks: 0.5
+
+# Confirmation settings
+confirm:
+  window_s: 18        # Confirmation window length (seconds) after candidate
+  min_axes: 2         # Minimum number of axes that must be satisfied (price is mandatory)
+  vol_z_min: 1.0      # Volume z-score threshold for confirmation (legacy, kept for compatibility)
+  spread_max: 0.03    # Maximum spread threshold (legacy, kept for compatibility)
+  persistent_n: 2     # Minimum consecutive ticks that must satisfy conditions
+  exclude_cand_point: true  # Exclude candidate point from confirmation window
+
+  # Delta-based relative improvement settings
+  require_price_axis: true   # Price axis satisfaction is mandatory
+  pre_window_s: 5            # Pre-window length for comparison (seconds before candidate)
+
+  delta:
+    ret_min: 0.0001          # Minimum relative return improvement (Pre vs Now) - relaxed
+    zvol_min: 0.1            # Minimum z_vol increase (Pre vs Now) - relaxed
+    spread_drop: 0.0001      # Minimum spread reduction (Pre vs Now) - relaxed
+
+# Refractory settings
+refractory:
+  duration_s: 120     # Refractory period duration (seconds) after confirmation
+  extend_on_confirm: true  # Whether to extend refractory period on new confirmation
+
+# ML Integration
+ml:
+  model_path: models/onset_model.pkl    # Path to trained ML model
+  threshold: 0.6                        # onset_strength threshold for confirmation
+  use_hybrid_confirm: true              # Use hybrid ML+rule based confirmation
+  enabled: true                         # Enable/disable ML features
+
+# Backtest settings
+backtest:
+  start_date: "2025-09-01"             # Backtest start date
+  end_date: "2025-09-30"               # Backtest end date
+  use_hybrid_confirm: true             # Use hybrid confirm results
+  report_dir: reports/                 # Report output directory
+
+# Trading settings
+trading:
+  simulator:
+    capital: 10000000         # Initial capital (KRW)
+    fee_rate: 0.0005          # Transaction fee (round trip)
+    slippage: 0.0002          # Slippage assumption
+    hold_time_s: 60           # Holding time (seconds)
+    stop_loss_pct: 0.01       # Stop loss threshold (1%)
+    take_profit_pct: 0.02     # Take profit threshold (2%)
+  live:
+    api: dummy                # Live API type (kiwoom, dummy)
+    account_no: "1234567890"  # Mock account number
+    risk_limit_pct: 0.05      # Max position size relative to capital
+
+# Logging
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_rotation: true

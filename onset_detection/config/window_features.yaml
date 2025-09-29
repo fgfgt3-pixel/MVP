@@ -1,0 +1,38 @@
+# Window Features Configuration
+# Sliding window aggregation settings for pattern detection
+
+window_features:
+  enabled: true                        # Enable/disable window features generation
+
+  # Time-based windows (in seconds)
+  time_windows: [0.5, 1, 2, 5, 10]
+
+  # Tick-based windows (number of ticks)
+  tick_windows: [10, 20, 50]
+
+  # Aggregation functions to apply
+  agg_funcs:
+    - mean                            # Average value
+    - std                             # Standard deviation
+    - min                             # Minimum value
+    - max                             # Maximum value
+    - slope                           # Linear regression slope
+    - last_first                      # Last - First value (change)
+    - uptick_ratio                    # Ratio of price increases
+
+  # Features to apply window aggregation on
+  target_features:
+    - price
+    - ret_1s
+    - z_vol_1s
+    - spread
+    - microprice_slope
+    - ticks_per_sec
+
+  # Pre vs Now comparison
+  pre_vs_now: true                    # Calculate relative improvement (Delta)
+  pre_window_s: 5                     # Pre-window length for comparison (seconds)
+
+  # NaN handling
+  fillna_method: "forward"            # forward | backward | zero
+  min_periods: 3                      # Minimum observations for valid window

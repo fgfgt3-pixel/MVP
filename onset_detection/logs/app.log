@@ -1,0 +1,295 @@
+2025-09-24 14:06:32,887 - event_test - INFO - Starting event store test
+2025-09-24 14:06:32,892 - event_test - INFO - EventStore initialized
+2025-09-24 14:06:32,892 - event_test - INFO - Cleared existing events
+2025-09-24 14:06:32,892 - event_test - INFO - Saving 5 sample events
+2025-09-24 14:06:32,894 - event_test - ERROR - Test failed with error: 'cp949' codec can't encode character '\u2713' in position 34: illegal multibyte sequence
+2025-09-24 14:06:56,490 - event_test - INFO - Starting event store test
+2025-09-24 14:06:56,495 - event_test - INFO - EventStore initialized
+2025-09-24 14:06:56,496 - event_test - INFO - Cleared existing events
+2025-09-24 14:06:56,496 - event_test - INFO - Saving 5 sample events
+2025-09-24 14:06:56,496 - event_test - INFO - Saved event: onset_candidate for 005930 with score 2.3
+2025-09-24 14:06:56,497 - event_test - INFO - Saved event: onset_confirmed for 005930 with score 3.1
+2025-09-24 14:06:56,497 - event_test - INFO - Saved event: onset_confirmed for 000660 with score 2.8
+2025-09-24 14:06:56,498 - event_test - INFO - Saved event: refractory_enter for 005930 with score N/A
+2025-09-24 14:06:56,498 - event_test - INFO - Saved event: refractory_enter for 000660 with score N/A
+2025-09-24 14:06:56,506 - event_test - INFO - Loaded 5 events from store
+2025-09-24 14:06:56,514 - event_test - INFO - Event store test completed successfully
+2025-09-24 14:23:28,130 - eval_test - INFO - Starting evaluation test
+2025-09-24 14:23:28,140 - eval_test - INFO - Loading events from: data/events/sample.jsonl
+2025-09-24 14:23:28,140 - eval_test - INFO - Loading labels from: data/labels/sample.csv
+2025-09-24 14:23:28,141 - eval_test - ERROR - Evaluation test failed: Unknown directory type 'labels'. Available types: raw, clean, features, events, reports, plots, logs
+2025-09-24 14:24:25,739 - eval_test - INFO - Starting evaluation test
+2025-09-24 14:24:25,749 - eval_test - INFO - Loading events from: data/events/sample.jsonl
+2025-09-24 14:24:25,749 - eval_test - INFO - Loading labels from: data/labels/sample.csv
+2025-09-24 14:24:25,750 - eval_test - ERROR - Evaluation test failed: Labels file not found: C:\Users\fgfgt\OneDrive\바탕 화면\MVP\onset_detection\data\labels\data\labels\sample.csv
+2025-09-24 14:24:42,300 - eval_test - INFO - Starting evaluation test
+2025-09-24 14:24:42,310 - eval_test - INFO - Loading events from: data/events/sample.jsonl
+2025-09-24 14:24:42,310 - eval_test - INFO - Loading labels from: data/labels/sample.csv
+2025-09-24 14:24:42,311 - eval_test - ERROR - Evaluation test failed: 'PathManager' object has no attribute 'get_project_root'
+2025-09-24 14:24:58,839 - eval_test - INFO - Starting evaluation test
+2025-09-24 14:24:58,849 - eval_test - INFO - Loading events from: data/events/sample.jsonl
+2025-09-24 14:24:58,849 - eval_test - INFO - Loading labels from: data/labels/sample.csv
+2025-09-24 14:24:58,853 - eval_test - INFO - Computing metrics with trading hours: 6.5
+2025-09-24 14:24:58,855 - eval_test - INFO - Evaluation report saved to: C:\Users\fgfgt\OneDrive\바탕 화면\MVP\onset_detection\reports\eval_summary.json
+2025-09-24 14:24:58,855 - eval_test - INFO - Evaluation test completed successfully
+2025-09-24 14:26:13,923 - eval_test - INFO - Starting evaluation test
+2025-09-24 14:26:13,933 - eval_test - INFO - Loading events from: data/events/sample.jsonl
+2025-09-24 14:26:13,934 - eval_test - INFO - Loading labels from: data/labels/sample.csv
+2025-09-24 14:26:13,937 - eval_test - INFO - Computing metrics with trading hours: 6.5
+2025-09-24 14:26:13,940 - eval_test - INFO - Evaluation report saved to: C:\Users\fgfgt\OneDrive\바탕 화면\MVP\onset_detection\reports\eval_summary.json
+2025-09-24 14:26:13,941 - eval_test - INFO - Evaluation test completed successfully
+2025-09-24 14:26:29,233 - eval_test - INFO - Starting evaluation test
+2025-09-24 14:26:29,242 - eval_test - INFO - Loading events from: data/events/sample.jsonl
+2025-09-24 14:26:29,243 - eval_test - INFO - Loading labels from: data/labels/sample.csv
+2025-09-24 14:26:29,246 - eval_test - INFO - Computing metrics with trading hours: 6.5
+2025-09-24 14:26:29,249 - eval_test - INFO - Evaluation report saved to: C:\Users\fgfgt\OneDrive\바탕 화면\MVP\onset_detection\reports\eval_summary.json
+2025-09-24 14:26:29,249 - eval_test - INFO - Evaluation test completed successfully
+2025-09-24 14:26:58,647 - eval_test - INFO - Starting evaluation test
+2025-09-24 14:26:58,658 - eval_test - INFO - Loading events from: data/events/sample.jsonl
+2025-09-24 14:26:58,658 - eval_test - INFO - Loading labels from: data/labels/sample.csv
+2025-09-24 14:26:58,661 - eval_test - INFO - Computing metrics with trading hours: 6.5
+2025-09-24 14:26:58,664 - eval_test - INFO - Evaluation report saved to: C:\Users\fgfgt\OneDrive\바탕 화면\MVP\onset_detection\reports\eval_summary.json
+2025-09-24 14:26:58,664 - eval_test - INFO - Evaluation test completed successfully
+2025-09-24 14:27:06,803 - eval_test - INFO - Starting evaluation test
+2025-09-24 14:27:06,813 - eval_test - INFO - Loading events from default store
+2025-09-24 14:27:06,813 - eval_test - INFO - Loading labels from: sample.csv
+2025-09-24 14:27:06,817 - eval_test - INFO - Computing metrics with trading hours: 6.5
+2025-09-24 14:27:06,819 - eval_test - INFO - Evaluation report saved to: C:\Users\fgfgt\OneDrive\바탕 화면\MVP\onset_detection\reports\eval_summary.json
+2025-09-24 14:27:06,820 - eval_test - INFO - Evaluation test completed successfully
+2025-09-24 14:52:37,509 - features_test - INFO - Starting features calculation test
+2025-09-24 14:52:37,510 - features_test - INFO - Loading data from: data/clean/sample.csv
+2025-09-24 14:52:37,517 - features_test - INFO - Calculating core indicators
+2025-09-24 14:52:37,523 - features_test - ERROR - Features calculation failed: 'dict' object has no attribute 'vol_window'
+2025-09-24 14:52:55,531 - features_test - INFO - Starting features calculation test
+2025-09-24 14:52:55,531 - features_test - INFO - Loading data from: data/clean/sample.csv
+2025-09-24 14:52:55,539 - features_test - INFO - Calculating core indicators
+2025-09-24 14:52:55,563 - features_test - INFO - Saving results to: data/features/sample_features.csv
+2025-09-24 14:52:55,576 - features_test - INFO - Features calculation completed successfully
+2025-09-24 15:04:17,579 - candidate_test - INFO - Starting candidate detection test
+2025-09-24 15:04:17,579 - candidate_test - INFO - Loading features from: data/features/sample_features.csv
+2025-09-24 15:04:17,588 - candidate_test - INFO - Initializing candidate detector
+2025-09-24 15:04:17,599 - candidate_test - INFO - Getting detection statistics
+2025-09-24 15:04:17,603 - candidate_test - INFO - Detecting and saving candidates
+2025-09-24 15:04:17,604 - candidate_test - INFO - Candidate detection completed successfully
+2025-09-24 15:04:27,878 - candidate_test - INFO - Starting candidate detection test
+2025-09-24 15:04:27,878 - candidate_test - INFO - Loading features from: data/features/sample_features.csv
+2025-09-24 15:04:27,886 - candidate_test - INFO - Initializing candidate detector
+2025-09-24 15:04:27,898 - candidate_test - INFO - Getting detection statistics
+2025-09-24 15:04:27,901 - candidate_test - INFO - Detecting and saving candidates
+2025-09-24 15:04:27,907 - candidate_test - ERROR - Candidate detection failed: 'cp949' codec can't encode character '\u2713' in position 15: illegal multibyte sequence
+2025-09-24 15:04:43,808 - candidate_test - INFO - Starting candidate detection test
+2025-09-24 15:04:43,809 - candidate_test - INFO - Loading features from: data/features/sample_features.csv
+2025-09-24 15:04:43,812 - candidate_test - INFO - Initializing candidate detector
+2025-09-24 15:04:43,824 - candidate_test - INFO - Getting detection statistics
+2025-09-24 15:04:43,828 - candidate_test - INFO - Detecting and saving candidates
+2025-09-24 15:04:43,845 - candidate_test - INFO - Candidate detection completed successfully
+2025-09-24 15:25:55,926 - confirm_test - INFO - Starting confirmation test
+2025-09-24 15:25:55,926 - confirm_test - INFO - Loading features from: data/features/sample_features.csv
+2025-09-24 15:25:55,930 - confirm_test - INFO - Loading candidates from: data/events/sample_candidates.jsonl
+2025-09-24 15:25:55,930 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 15:25:55,943 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 15:25:55,973 - confirm_test - INFO - Confirming and saving candidates
+2025-09-24 15:25:55,988 - confirm_test - INFO - Confirmation test completed successfully
+2025-09-24 15:26:03,104 - confirm_test - INFO - Starting confirmation test
+2025-09-24 15:26:03,104 - confirm_test - INFO - Loading features from: data/features/sample_features.csv
+2025-09-24 15:26:03,108 - confirm_test - INFO - Loading candidates from: data/events/sample_candidates.jsonl
+2025-09-24 15:26:03,109 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 15:26:03,121 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 15:26:03,152 - confirm_test - INFO - Confirming and saving candidates
+2025-09-24 15:26:03,166 - confirm_test - INFO - Confirmation test completed successfully
+2025-09-24 15:41:44,658 - confirm_test - INFO - Starting confirmation test
+2025-09-24 15:41:44,658 - confirm_test - INFO - Loading features from: data/features/sample_features.csv
+2025-09-24 15:41:44,662 - confirm_test - INFO - Loading candidates from: data/events/sample_candidates.jsonl
+2025-09-24 15:41:44,663 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 15:41:44,676 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 15:41:44,706 - confirm_test - INFO - Confirming and saving candidates
+2025-09-24 15:41:44,720 - confirm_test - INFO - Confirmation test completed successfully
+2025-09-24 15:41:58,314 - refractory_test - INFO - Starting refractory test
+2025-09-24 15:41:58,314 - refractory_test - INFO - Loading candidates from: data/events/sample_candidates.jsonl
+2025-09-24 15:41:58,315 - refractory_test - INFO - Loading confirmations from: data/events/sample_confirms.jsonl
+2025-09-24 15:41:58,316 - refractory_test - INFO - Initializing refractory manager
+2025-09-24 15:41:58,329 - refractory_test - INFO - Getting refractory statistics
+2025-09-24 15:41:58,329 - refractory_test - INFO - Processing and saving events
+2025-09-24 15:41:58,353 - refractory_test - ERROR - Refractory test failed: 'stocks_tracked'
+2025-09-24 15:42:15,743 - refractory_test - INFO - Starting refractory test
+2025-09-24 15:42:15,743 - refractory_test - INFO - Loading candidates from: data/events/sample_candidates.jsonl
+2025-09-24 15:42:15,744 - refractory_test - INFO - Loading confirmations from: data/events/sample_confirms.jsonl
+2025-09-24 15:42:15,745 - refractory_test - INFO - Initializing refractory manager
+2025-09-24 15:42:15,758 - refractory_test - INFO - Getting refractory statistics
+2025-09-24 15:42:15,758 - refractory_test - INFO - Processing and saving events
+2025-09-24 15:42:15,780 - refractory_test - INFO - Refractory test completed successfully
+2025-09-24 17:00:30,099 - quality_test - INFO - Starting quality report generation
+2025-09-24 17:00:30,099 - quality_test - INFO - Initializing quality reporter
+2025-09-24 17:00:30,118 - quality_test - INFO - Loading and analyzing events
+2025-09-24 17:00:30,119 - quality_test - INFO - Saving quality report to: reports\onset_quality.json
+2025-09-24 17:00:30,130 - quality_test - INFO - Quality report generation completed successfully
+2025-09-24 17:00:44,402 - quality_test - INFO - Starting quality report generation
+2025-09-24 17:00:44,402 - quality_test - INFO - Initializing quality reporter
+2025-09-24 17:00:44,422 - quality_test - INFO - Loading and analyzing events
+2025-09-24 17:00:44,425 - quality_test - INFO - Saving quality report to: reports\onset_quality_full.json
+2025-09-24 17:00:44,440 - quality_test - INFO - Quality report generation completed successfully
+2025-09-24 17:07:14,543 - plot_report_test - INFO - Starting plot report generation
+2025-09-24 17:07:14,544 - plot_report_test - INFO - Initializing plot reporter
+2025-09-24 17:07:14,563 - plot_report_test - INFO - Generating plot report for output: reports\plots\sample_report.png
+2025-09-24 17:07:16,221 - plot_report_test - INFO - Plot report generation completed successfully
+2025-09-24 17:07:26,944 - plot_report_test - INFO - Starting plot report generation
+2025-09-24 17:07:26,945 - plot_report_test - INFO - Initializing plot reporter
+2025-09-24 17:07:26,967 - plot_report_test - INFO - Generating plot report for output: reports\plots\sample_report_filtered.png
+2025-09-24 17:07:27,604 - plot_report_test - INFO - Plot report generation completed successfully
+2025-09-24 22:16:42,474 - candidate_test - INFO - Starting candidate detection test
+2025-09-24 22:16:42,474 - candidate_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:16:42,588 - candidate_test - INFO - Initializing candidate detector
+2025-09-24 22:16:42,602 - candidate_test - INFO - Getting detection statistics
+2025-09-24 22:16:46,217 - candidate_test - INFO - Detecting and saving candidates
+2025-09-24 22:16:47,804 - candidate_test - ERROR - Candidate detection failed: Timestamp 'ts' must be numeric (Unix timestamp)
+2025-09-24 22:17:19,364 - candidate_test - INFO - Starting candidate detection test
+2025-09-24 22:17:19,364 - candidate_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:17:19,482 - candidate_test - INFO - Initializing candidate detector
+2025-09-24 22:17:19,496 - candidate_test - INFO - Getting detection statistics
+2025-09-24 22:17:23,170 - candidate_test - INFO - Detecting and saving candidates
+2025-09-24 22:17:24,778 - candidate_test - ERROR - Candidate detection failed: Timestamp 'ts' must be numeric (Unix timestamp)
+2025-09-24 22:17:58,236 - candidate_test - INFO - Starting candidate detection test
+2025-09-24 22:17:58,236 - candidate_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:17:58,350 - candidate_test - INFO - Initializing candidate detector
+2025-09-24 22:17:58,364 - candidate_test - INFO - Getting detection statistics
+2025-09-24 22:18:01,935 - candidate_test - INFO - Detecting and saving candidates
+2025-09-24 22:18:03,497 - candidate_test - ERROR - Candidate detection failed: Timestamp 'ts' must be numeric (Unix timestamp)
+2025-09-24 22:18:53,147 - candidate_test - INFO - Starting candidate detection test
+2025-09-24 22:18:53,147 - candidate_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:18:53,457 - candidate_test - INFO - Initializing candidate detector
+2025-09-24 22:18:53,471 - candidate_test - INFO - Getting detection statistics
+2025-09-24 22:18:57,464 - candidate_test - INFO - Detecting and saving candidates
+2025-09-24 22:19:00,098 - candidate_test - INFO - Candidate detection completed successfully
+2025-09-24 22:19:31,114 - confirm_test - INFO - Starting confirmation test
+2025-09-24 22:19:31,115 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:19:31,242 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-24 22:19:31,260 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 22:19:31,274 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 22:19:31,287 - confirm_test - ERROR - Confirmation test failed: '>=' not supported between instances of 'str' and 'float'
+2025-09-24 22:20:04,230 - confirm_test - INFO - Starting confirmation test
+2025-09-24 22:20:04,230 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:20:04,534 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-24 22:20:04,552 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 22:20:04,566 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 22:20:04,570 - confirm_test - ERROR - Confirmation test failed: Invalid comparison between dtype=datetime64[ns, UTC+09:00] and float
+2025-09-24 22:21:42,701 - confirm_test - INFO - Starting confirmation test
+2025-09-24 22:21:42,701 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:21:43,010 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-24 22:21:43,030 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 22:21:43,044 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 22:21:43,154 - confirm_test - ERROR - Confirmation test failed: float() argument must be a string or a number, not 'Timestamp'
+2025-09-24 22:22:12,369 - confirm_test - INFO - Starting confirmation test
+2025-09-24 22:22:12,369 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:22:12,677 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-24 22:22:12,696 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 22:22:12,710 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 22:22:12,818 - confirm_test - ERROR - Confirmation test failed: float() argument must be a string or a number, not 'Timestamp'
+2025-09-24 22:22:41,138 - confirm_test - INFO - Starting confirmation test
+2025-09-24 22:22:41,138 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:22:41,462 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-24 22:22:41,480 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 22:22:41,494 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 22:23:12,199 - confirm_test - ERROR - Confirmation test failed: Invalid comparison between dtype=datetime64[ns, UTC+09:00] and float
+2025-09-24 22:23:39,375 - confirm_test - INFO - Starting confirmation test
+2025-09-24 22:23:39,375 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:23:39,684 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-24 22:23:39,702 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 22:23:39,716 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 22:24:10,228 - confirm_test - ERROR - Confirmation test failed: Invalid comparison between dtype=datetime64[ns, UTC+09:00] and float
+2025-09-24 22:24:47,801 - confirm_test - INFO - Starting confirmation test
+2025-09-24 22:24:47,802 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:24:48,107 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-24 22:24:48,125 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 22:24:48,139 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 22:25:49,446 - confirm_test - INFO - Confirming and saving candidates
+2025-09-24 22:26:20,540 - confirm_test - INFO - Confirmation test completed successfully
+2025-09-24 22:26:52,807 - refractory_test - INFO - Starting refractory test
+2025-09-24 22:26:52,808 - refractory_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-24 22:26:52,827 - refractory_test - INFO - Loading confirmations from: data/events/023790_confirmed.jsonl
+2025-09-24 22:26:52,848 - refractory_test - INFO - Initializing refractory manager
+2025-09-24 22:26:52,863 - refractory_test - INFO - Getting refractory statistics
+2025-09-24 22:26:52,873 - refractory_test - INFO - Processing and saving events
+2025-09-24 22:26:54,916 - refractory_test - INFO - Refractory test completed successfully
+2025-09-24 22:46:28,378 - confirm_test - INFO - Starting confirmation test
+2025-09-24 22:46:28,378 - confirm_test - INFO - Loading features from: data/features/023790_features_fixed.csv
+2025-09-24 22:46:28,379 - confirm_test - ERROR - Confirmation test failed: Features file not found: data/features/023790_features_fixed.csv
+2025-09-24 22:46:40,320 - confirm_test - INFO - Starting confirmation test
+2025-09-24 22:46:40,320 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:46:40,631 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-24 22:46:40,650 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 22:46:40,664 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 22:47:44,989 - confirm_test - INFO - Confirming and saving candidates
+2025-09-24 22:49:10,706 - confirm_test - INFO - Starting confirmation test
+2025-09-24 22:49:10,706 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:49:11,039 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-24 22:49:11,058 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 22:49:11,072 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 22:50:10,044 - confirm_test - INFO - Confirming and saving candidates
+2025-09-24 22:51:08,381 - confirm_test - INFO - Confirmation test completed successfully
+2025-09-24 22:51:17,598 - confirm_test - INFO - Starting confirmation test
+2025-09-24 22:51:17,598 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:51:17,930 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-24 22:51:17,949 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 22:51:17,962 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 22:55:09,509 - confirm_test - INFO - Starting confirmation test
+2025-09-24 22:55:09,509 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:55:09,827 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-24 22:55:09,846 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 22:55:09,860 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 22:56:08,150 - confirm_test - INFO - Confirming and saving candidates
+2025-09-24 22:57:06,267 - confirm_test - INFO - Confirmation test completed successfully
+2025-09-24 22:57:15,937 - confirm_test - INFO - Starting confirmation test
+2025-09-24 22:57:15,937 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:57:16,246 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-24 22:57:16,264 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 22:57:16,278 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 22:58:15,282 - confirm_test - INFO - Confirming and saving candidates
+2025-09-24 22:59:13,549 - confirm_test - INFO - Confirmation test completed successfully
+2025-09-24 22:59:47,396 - candidate_test - INFO - Starting candidate detection test
+2025-09-24 22:59:47,396 - candidate_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 22:59:47,710 - candidate_test - INFO - Initializing candidate detector
+2025-09-24 22:59:47,724 - candidate_test - INFO - Getting detection statistics
+2025-09-24 22:59:51,819 - candidate_test - INFO - Detecting and saving candidates
+2025-09-24 22:59:54,479 - candidate_test - INFO - Candidate detection completed successfully
+2025-09-24 23:01:45,314 - candidate_test - INFO - Starting candidate detection test
+2025-09-24 23:01:45,315 - candidate_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 23:01:45,634 - candidate_test - INFO - Initializing candidate detector
+2025-09-24 23:01:45,649 - candidate_test - INFO - Getting detection statistics
+2025-09-24 23:01:49,629 - candidate_test - INFO - Detecting and saving candidates
+2025-09-24 23:01:52,224 - candidate_test - INFO - Candidate detection completed successfully
+2025-09-24 23:02:08,154 - confirm_test - INFO - Starting confirmation test
+2025-09-24 23:02:08,155 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 23:02:08,468 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates_ms.jsonl
+2025-09-24 23:02:08,486 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 23:02:08,500 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 23:03:13,084 - confirm_test - INFO - Confirming and saving candidates
+2025-09-24 23:03:46,544 - confirm_test - ERROR - Confirmation test failed: Out of bounds nanosecond timestamp: 57639-11-12 08:39:08
+2025-09-24 23:04:10,303 - confirm_test - INFO - Starting confirmation test
+2025-09-24 23:04:10,303 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 23:04:10,611 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates_ms.jsonl
+2025-09-24 23:04:10,629 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 23:04:10,643 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 23:05:15,970 - confirm_test - INFO - Confirming and saving candidates
+2025-09-24 23:06:55,024 - confirm_test - INFO - Starting confirmation test
+2025-09-24 23:06:55,024 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 23:06:55,330 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates_ms.jsonl
+2025-09-24 23:06:55,349 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 23:06:55,363 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 23:07:59,551 - confirm_test - INFO - Confirming and saving candidates
+2025-09-24 23:09:16,346 - confirm_test - INFO - Starting confirmation test
+2025-09-24 23:09:16,346 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-24 23:09:16,665 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates_ms.jsonl
+2025-09-24 23:09:16,686 - confirm_test - INFO - Initializing confirm detector
+2025-09-24 23:09:16,700 - confirm_test - INFO - Getting confirmation statistics
+2025-09-24 23:10:21,498 - confirm_test - INFO - Confirming and saving candidates
+2025-09-25 10:54:18,440 - confirm_test - INFO - Starting confirmation test
+2025-09-25 10:54:18,441 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-25 10:54:18,836 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-25 10:54:18,855 - confirm_test - INFO - Initializing confirm detector
+2025-09-25 10:54:18,868 - confirm_test - ERROR - Confirmation test failed: 'ConfirmDetector' object has no attribute 'vol_z_min'
+2025-09-25 10:55:27,101 - confirm_test - INFO - Starting confirmation test
+2025-09-25 10:55:27,102 - confirm_test - INFO - Loading features from: data/features/023790_44indicators_realtime_20250902_features.csv
+2025-09-25 10:55:27,490 - confirm_test - INFO - Loading candidates from: data/events/023790_candidates.jsonl
+2025-09-25 10:55:27,509 - confirm_test - INFO - Initializing confirm detector
+2025-09-25 10:55:27,526 - confirm_test - INFO - Getting confirmation statistics
+2025-09-25 10:57:00,786 - confirm_test - INFO - Confirming and saving candidates

@@ -1,0 +1,23 @@
+{
+  "n_candidates": 0,
+  "n_confirms": 2,
+  "n_rejected": 30,
+  "confirm_rate": 0.0,
+  "rejection_rate": 0.0,
+  "stocks_analyzed": 1,
+  "total_events": 32,
+  "event_types": {
+    "onset_rejected_refractory": 30,
+    "onset_confirmed": 2
+  },
+  "config_used": {
+    "refractory_duration_s": 120,
+    "confirm_window_s": 20,
+    "detection_threshold": 2.0
+  },
+  "tta_avg": 5.0,
+  "tta_median": 5.0,
+  "tta_p95": 5.0,
+  "tta_min": 5.0,
+  "tta_max": 5.0
+}
