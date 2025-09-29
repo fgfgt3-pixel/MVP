@@ -68,32 +68,38 @@ python onset_detection/scripts/plot_report_test.py --csv data/clean/sample.csv -
 This is an MVP system for detecting Korean stock market surge onsets (급등 시작점) from 1-tick data. The system processes real-time tick data to identify the beginning of price surges using a multi-stage detection pipeline optimized for speed and accuracy.
 
 ### High-Level Architecture
-The system follows a **4-Phase development approach**:
+The system follows a **4-Phase development approach** with **CPD 3-Layer Structure**:
 
 1. **Phase 0**: Baseline & Parity (CSV replay ≈ real-time streaming)
-2. **Phase 1**: Onset Detection Engine v2 (candidate → confirm → refractory)
+2. **Phase 1**: Onset Detection Engine v3 (CPD→Δ확인→불응, ML 필터)
 3. **Phase 2**: Execution Readiness Guards (liquidity/slippage checks)
-4. **Phase 3**: Ranking & Tuning (44 indicators with parameter sweeps)
+4. **Phase 3**: Ranking & Tuning (47 indicators/CPD parameters with parameter sweeps)
 
 ### Core Data Flow
 ```
-Raw CSV (1-tick) → Clean → Features (44 indicators) → Detection → Events → Reports
+Raw CSV (1-tick) → Clean → Features (47 indicators) → CPD Gate → Detection → Events → Reports
 ```
 
 The system is designed to maintain **identical decision logic** between offline CSV replay and online real-time streaming to ensure production parity.
 
-### Detection Engine (3-Stage State Machine)
-- **CandidateDetector**: Rule-based scoring using Speed + Participation + Friction metrics
-- **ConfirmDetector**: Delta-based validation within confirmation window (default 20s)
+### Detection Engine (4-Stage State Machine with CPD Gate)
+- **CPD Gate**: Change Point Detection using CUSUM (price axis) + Page-Hinkley (volume axis)
+- **CandidateDetector**: Rule-based scoring using Speed + Participation + Friction metrics (only after CPD gate pass)
+- **ConfirmDetector**: Delta-based validation within confirmation window (default 20s) with earliest-hit + persistent_n
 - **RefractoryManager**: Cooldown periods (default 120s) to prevent duplicate alerts
+- **ML Filter**: Optional ML-based final filtering with onset_strength threshold
 
 ### Key Modules
 
 #### onset_detection/src/
-- **config_loader.py**: YAML configuration with config hash injection for version tracking
+- **config_loader.py**: YAML configuration with config hash injection for version tracking (includes CPD parameters)
 - **data_loader.py**: Timestamp parsing (ms epochs → Asia/Seoul timezone) with data validation
 - **features/core_indicators.py**: Core feature calculation (returns, volume z-scores, friction metrics)
-- **detection/**: 3-stage detection state machine (candidate/confirm/refractory)
+- **cpd/**: CPD gate modules
+  - **online_cusum.py**: OnlineCUSUM(k,h).update(x)->bool
+  - **page_hinkley.py**: PageHinkley(delta,lambda).update(x)->bool
+- **detection/**: 4-stage detection state machine (CPD/candidate/confirm/refractory)
+  - **cpd_gate.py**: CPD gate integration (price=CUSUM, volume=Page-Hinkley)
 - **event_store.py**: JSONL-based event storage for efficient append operations
 - **backtest/**: Backtesting framework with performance metrics
 - **ml/**: ML integration for hybrid rule-based + ML confirmation
@@ -115,7 +121,9 @@ The system is designed to maintain **identical decision logic** between offline 
 
 #### Feature Engineering
 - **Core set (6-8 indicators)**: `ret_1s`, `ret_accel`, `z_vol_1s`, `ticks_per_sec`, `spread`, `microprice_momentum`
-- **Extended set (44 indicators)**: Includes additional friction, participation, and momentum metrics
+- **Extended set (47 indicators)**: Includes additional friction, participation, and momentum metrics
+  - **Recent additions**: `inter_trade_time`, `imbalance_1s`, `OFI_1s`
+  - **Categories**: Basic data (4), Technical indicators (11), Returns (2), Order book (10+10), Advanced (10)
 - Time-based aggregation uses second-level timestamps with proper sliding window calculations
 
 #### Session Management
@@ -125,7 +133,12 @@ The system is designed to maintain **identical decision logic** between offline 
 
 ### Detection Logic Specifics
 
-#### Onset Scoring
+#### CPD Gate Parameters
+- **CUSUM**: `k`=0.5~1.0×평시σ(MAD 기반), `h`=4~8×k for price axis (ret_50ms/microprice_slope)
+- **Page-Hinkley**: `delta`≈0.05–0.1, `lambda`≈5–10 for volume axis (z_vol_1s)
+- **Operational**: `min_pre_s` (early market protection), `cooldown_s` (re-trigger suppression)
+
+#### Onset Scoring (Post-CPD Gate)
 ```
 S_t = w_Speed × Speed_metrics + w_Participation × Volume_metrics + w_Friction × Spread_metrics
 ```
@@ -137,7 +150,8 @@ S_t = w_Speed × Speed_metrics + w_Participation × Volume_metrics + w_Friction 
 - **Delta thresholds**: Relative improvement over pre-window baseline
 
 #### Event Types
-- `onset_candidate`: Initial detection trigger
+- `cpd_trigger`: CPD gate passage event
+- `onset_candidate`: Initial detection trigger (post-CPD gate)
 - `onset_confirm`: Validated onset after confirmation window
 - `refractory_enter`/`refractory_exit`: Cooldown state management
 
@@ -146,7 +160,7 @@ S_t = w_Speed × Speed_metrics + w_Participation × Volume_metrics + w_Friction 
 #### Data Pipeline Directories
 - **data/raw/**: Original 1-tick CSV files
 - **data/clean/**: Processed CSV with validated timestamps and column mappings
-- **data/features/**: Generated 44-indicator feature sets
+- **data/features/**: Generated 47-indicator feature sets
 - **data/events/**: JSONL event logs (candidates, confirmations)
 - **reports/**: Analysis outputs, performance metrics, plots
 
