@@ -5,7 +5,8 @@
       "Bash(dir:*)",
       "Bash(find:*)",
       "Bash(code --version)",
-      "Bash(code:*)"
+      "Bash(code:*)",
+      "Bash(awk:*)"
     ],
     "deny": [],
     "ask": []

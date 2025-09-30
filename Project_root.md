@@ -4,7 +4,7 @@ Role: 수석 소프트웨어 아키텍트
 
 ---
 
-# 📁 프로젝트 루트 제안 (미니멀 7-모듈)
+# 📁 프로젝트 루트 제안 (Detection Only 기준, 7-모듈 유지)
 
 ```
 project-root/
@@ -34,7 +34,7 @@ project-root/
 ├─ scripts/                    # 단일 파일 실행 진입점(Phase 스텝용)
 │  ├─ step01_prep_clean.py     # 정제/검증(Phase0)
 │  ├─ step02_features.py       # 최소셋/47지표 피처화
-│  ├─ step03_detect.py         # **CPD 게이트 → 후보 → Δ확인 → 불응** 상태기계
+│  ├─ step03_detect.py         # DetectionOnly: 후보→짧은 확인→불응(=Alert 발령)
 │  ├─ step04_execute_guard.py  # 체결성/슬리피지 가드(로그만)
 │  ├─ step05_eval_metrics.py   # 탐지/FP/h/TTA/체결성
 │  ├─ step06_tune.py           # 임계/윈도우/가중치 스윕 + Stability Selection
@@ -46,8 +46,8 @@ project-root/
 │  ├─ config_loader.py         # YAML 로더 + config_hash 주입
 │  ├─ io_utils.py              # tz-aware 파서, 누출 방지 컷, 경로/캐시
 │  ├─ features_core.py         # **핵심 6–8개** 피처 계산(지연 최소)
-│  ├─ features_ext.py          # 확장 47지표(Phase3 튜닝 시 사용)
-│  ├─ detect_onset.py          # (후단) 후보 점수, Δ확인(가격축 필수+earliest-hit+연속성), 불응 FSM
+│  ├─ features_ext.py          # ✅ Phase 2 이후(분석·ML·확장용), 현재 미사용
+│  ├─ detect_onset.py          # ✅ DetectionOnly: 후보 → 짧은 확인 → 경보 → 불응 FSM
 │  ├─ execute_guard.py         # 체결성(spread/depth)/슬리피지 상한식
 │  ├─ ingestion.py             # CSV 리플레이/키움 스트림 **공용 인터페이스**
 │  ├─ metrics_eval.py          # In-window, FP/h, TTA p95, 체결성 통과율
@@ -130,13 +130,16 @@ project-root/
 
 ---
 
-## 🏃 실행 흐름(Phase ↔ scripts ↔ src 매핑)
+## 🏃 실행 흐름 (MVP/Detection Only 기준)
 
-* **Phase 0**: `scripts/step01_prep_clean.py` → `io_utils.py`
-* **Phase 1**: `scripts/step03_detect.py` → `features_core.py` + `detect_onset.py`
-* **Phase 2**: `scripts/step04_execute_guard.py` → `execute_guard.py`
-* **Phase 3**: `scripts/step06_tune.py` → `features_ext.py` + `metrics_eval.py`
-* **Phase 4**: `scripts/step07_replay.py` & `step08_online_stub.py` → `ingestion.py` + `metrics_eval.py`
+* **Phase 0**: `scripts/step01_prep_clean.py` → `io_utils.py` (동형성 확보)
+* **Phase 1**: `scripts/step02_features.py` → `features_core.py` (핵심 지표)
+* **Phase 1**: `scripts/step03_detect.py` → `detect_onset.py` (Alert까지)
+  → **여기서 종료** (체결성/매매 없음)
+
+※ **step04_execute_guard.py 이후 단계는 Phase 2+**
+* **Phase 2 (이후)**: 분석/필터링/강도분류/47지표/ML
+* **Phase 3 (이후)**: 매매전략/체결성/슬리피지 반영
 
 ---
 
@@ -155,6 +158,42 @@ eval:
 tune:
 \tpython scripts/step06_tune.py --cfg config/onset_default.yaml --grid config/profiles.yaml
 ```
+
+---
+
+## ✅ Phase 정의(Detection Only 재편 기준)
+
+1) **Phase 0**: 스캐폴딩/입출력/설정/동형성 확보
+2) **Phase 1**: 급등 포착(Detection Only)
+   - 핵심 6~8개 지표 중심
+   - 절대 임계 + 짧은 확인창(8~15초)
+   - FP 허용 → 경보 이벤트까지가 끝
+3) **Phase 2 (이후)**: 분석/필터링/강도분류/47지표/ML
+4) **Phase 3 (이후)**: 매매전략/체결성/슬리피지 반영
+
+---
+
+## ✅ config 구조 (Detection Only 모드 적용)
+
+* 기본: `config/onset_default.yaml`
+  - 확인창/임계/persistent/refractory 조정
+  - 절대 임계 기반 탐지 허용
+* `profiles.yaml`(옵션):
+  - General vs DetectionOnly 스위치 가능
+  - Phase2~3에서 확장
+
+---
+
+## ✅ 향후 확장 방향
+
+* **Phase 2**:
+  - 47개 지표, ML, 강도/패턴/타입 분류
+  - 체결성/슬리피지/FP필터링
+* **Phase 3~4**:
+  - 실매매/비중/익절·손절/전략
+  - REST/WebSocket 연동
+
+※ Detection Only 구조와 충돌 없음 (앞단만 담당)
 
 ---
 

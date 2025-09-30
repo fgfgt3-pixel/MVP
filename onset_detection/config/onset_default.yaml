@@ -11,21 +11,29 @@ paths:
   logs: logs
 
 onset:
-  refractory_s: 120
-  confirm_window_s: 20
+  refractory_s: 20       # Detection Only - short cooldown
+  confirm_window_s: 12   # Detection Only - short confirmation window
   score_threshold: 2.0
-  
+
   # Scoring weights (Speed + Participation + Friction)
   weights:
     speed: 0.4
     participation: 0.4
     friction: 0.2
-  
+
   # Thresholds (session-adaptive percentiles)
   thresholds:
     percentile: 95
     min_volume_z: 1.5
     min_return_pct: 0.005
+
+  # Detection Only absolute thresholds
+  speed:
+    ret_1s_threshold: 0.0008      # Minimum 1s return for speed axis
+  participation:
+    z_vol_threshold: 2.0          # Minimum volume z-score for participation axis
+  friction:
+    spread_narrowing_pct: 0.75    # Spread narrowing percentage threshold
 
 # Feature computation windows (seconds)
 features:
@@ -81,11 +89,11 @@ detection:
 
 # Confirmation settings
 confirm:
-  window_s: 18        # Confirmation window length (seconds) after candidate
+  window_s: 12        # Confirmation window length (seconds) after candidate - Detection Only
   min_axes: 2         # Minimum number of axes that must be satisfied (price is mandatory)
   vol_z_min: 1.0      # Volume z-score threshold for confirmation (legacy, kept for compatibility)
   spread_max: 0.03    # Maximum spread threshold (legacy, kept for compatibility)
-  persistent_n: 2     # Minimum consecutive ticks that must satisfy conditions
+  persistent_n: 4     # Minimum consecutive ticks that must satisfy conditions - Detection Only (relaxed for Recall)
   exclude_cand_point: true  # Exclude candidate point from confirmation window
 
   # Delta-based relative improvement settings
@@ -99,7 +107,7 @@ confirm:
 
 # Refractory settings
 refractory:
-  duration_s: 120     # Refractory period duration (seconds) after confirmation
+  duration_s: 20      # Refractory period duration (seconds) after confirmation - Detection Only (short cooldown)
   extend_on_confirm: true  # Whether to extend refractory period on new confirmation
 
 # ML Integration

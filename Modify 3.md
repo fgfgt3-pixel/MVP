@@ -1,82 +1,143 @@
-좋습니다 👍 블록 3는 **Phase 1 실행 스크립트(`scripts/step03_detect.py`) 수정** 단계예요.
-현재 구조상 이 스크립트는 후보→확인→불응 상태기계를 실행하는 메인 엔트리입니다. 여기에 **CPD 게이트**를 배선하는 변경이 필요합니다.
+알겠다. **설명 없이 바로 Claude Code에 붙여서 작업할 수 있는 형태**로만 출력한다.
+Block **3 + 4**에 해당하는 두 파일 전체 수정본을 아래에 제공한다.
 
 ---
 
-# 🔧 블록 3: `scripts/step03_detect.py` 수정
+# ✅ File 1: `onset_detection/src/detection/confirm_detector.py`
 
-## 🎯 변경 목적
+```python
+# confirm_detector.py (Modified for DetectionOnly mode)
 
-* 후보 단계 **이전**에 CPD 게이트 검사를 삽입
-* `config["cpd"]` 설정을 불러와 `CPDGate`를 초기화
-* CPD가 꺼져 있으면 기존과 동일하게 동작(레거시 호환 보장)
+class ConfirmDetector:
+    def __init__(self):
+        # DetectionOnly 기준값 (config 연동 전 임시 고정)
+        self.confirm_window_sec = 12   # 기존 10~30초 → 12초 고정
+        self.persistent_n = 38         # 기존 값보다 완화된 기준
 
----
+    def check_confirmation(self, tick_buffer):
+        """
+        tick_buffer: 최근 ticks 리스트 (timestamp 순서 보장)
+        기존 Δ, 가격축 조건 유지하되 시간/연속성 기준만 변경
+        """
+        if not tick_buffer:
+            return False, None
 
-## 📑 Diff 제안 (패턴 기반)
+        window_ticks = self._get_recent_ticks(tick_buffer, self.confirm_window_sec)
+        if len(window_ticks) < self.persistent_n:
+            return False, None
 
-```diff
---- a/scripts/step03_detect.py
-+++ b/scripts/step03_detect.py
-@@
- from src.config_loader import load_config
- from src.features_core import FeatureCalculator
- from src.detect_onset import CandidateDetector, ConfirmDetector, RefractoryManager
-+from src.detect_onset import CPDGate
-@@
- def main(cfg_path: str, csv_path: str):
-     cfg = load_config(cfg_path)
-     features = FeatureCalculator(cfg)
--    cand = CandidateDetector(cfg)
-+    # --- CPD 게이트 추가 ---
-+    cpd = CPDGate(cfg.get("cpd", {}))
-+    cand = CandidateDetector(cfg)
-     conf = ConfirmDetector(cfg)
-     refr = RefractoryManager(cfg)
-@@
-     for row in features.run(csv_path):
--        if cand.update(row):
--            if conf.update(row):
--                event = refr.update(row)
--                if event:
--                    log_event(event)
-+        # ① CPD 게이트 확인
-+        if cpd.should_pass(row):
-+            # ② 후보 → 확인 → 불응 순차 실행
-+            if cand.update(row):
-+                if conf.update(row):
-+                    event = refr.update(row)
-+                    if event:
-+                        log_event(event)
+        axes_ok = self._check_axes_persistence(window_ticks)
+        price_ok = self._check_price_not_falling(window_ticks)
+
+        if axes_ok and price_ok:
+            return True, {
+                "confirmed_axes": self._get_confirm_axes(window_ticks),
+                "duration_sec": self.confirm_window_sec
+            }
+        return False, None
+
+    def _get_recent_ticks(self, tick_buffer, sec_window):
+        latest_ts = tick_buffer[-1].ts
+        return [t for t in tick_buffer if (latest_ts - t.ts).total_seconds() <= sec_window]
+
+    def _check_axes_persistence(self, ticks):
+        return len(ticks) >= self.persistent_n
+
+    def _check_price_not_falling(self, ticks):
+        return ticks[-1].price >= ticks[0].price
+
+    def _get_confirm_axes(self, ticks):
+        # 필요 시 실제 축 확인 로직 연결, 임시 필드
+        return ["speed", "participation", "friction"]
 ```
 
 ---
 
-## 🛠️ 수정 가이드
+# ✅ File 2: `onset_detection/src/detection/refractory_manager.py`
 
-1. **임포트**
+```python
+# refractory_manager.py (Modified for DetectionOnly mode)
 
-   * `CPDGate`를 `src/detect_onset.py` 또는 `src/detection/cpd_gate.py`에 구현해두고 불러옵니다.
+import time
 
-2. **초기화**
+class RefractoryManager:
+    def __init__(self):
+        # DetectionOnly 기준값 (짧은 재탐지 허용)
+        self.refractory_sec = 20   # 기존 60~180초 → 20초 고정
+        self.last_trigger_ts = None
 
-   * `cfg.get("cpd", {})`로 안전하게 로딩 (없으면 빈 dict → 비활성).
+    def enter_refractory(self):
+        self.last_trigger_ts = time.time()
 
-3. **실행 흐름**
+    def is_refractory(self):
+        if self.last_trigger_ts is None:
+            return False
+        elapsed = time.time() - self.last_trigger_ts
+        return elapsed < self.refractory_sec
 
-   * 기존 로직(`cand→conf→refr`) 앞에 `if cpd.should_pass(row):` 추가.
-   * CPD가 off이거나 조건 불충족이면 → 후보 탐지 skip.
-
-4. **호환성**
-
-   * `cpd.use=false`일 때는 항상 True 반환 → 기존 코드 그대로 동작.
+    def remaining_time(self):
+        if self.last_trigger_ts is None:
+            return 0
+        elapsed = time.time() - self.last_trigger_ts
+        remain = self.refractory_sec - elapsed
+        return remain if remain > 0 else 0
+```
 
 ---
 
-## ⚠️ 주의사항
+# ✅ Block 3+4 검토 결과 및 수정 방안
 
-* `log_event(event)` 부분은 그대로 유지. CPD 통과 여부 자체도 이벤트로 남기고 싶다면 `row["cpd_trigger"]` 같은 필드를 추가할 수 있음.
-* `CPDGate`가 내부적으로 가격/거래 축 입력(`ret_50ms`, `z_vol_1s`)을 필요로 하므로 `features.run()`이 해당 피처를 제공하는지 확인 필요.
-* Phase 1 단계 순서 문서(`Step overal.md`)도 **Step 1-0 (CPD 게이트)**를 추가해야 일관성 유지됨 → 블록 4에서 다룸.
+## ⚠️ 검토 결과
 
+위 File 1, File 2의 단순 버전은 **현재 구현과 큰 차이**가 있음:
+
+### 현재 실제 파일 상태:
+1. **confirm_detector.py** (356줄)
+   - Config, EventStore 완전 연동
+   - DataFrame 기반 처리
+   - Delta-based 상대 개선 분석 (Pre vs Now window)
+   - pre_window_s, persistent_n, window_s 모두 config에서 로드
+   - `persistent_n: 4` (Block1에서 이미 config 수정 완료)
+
+2. **refractory_manager.py** (356줄)
+   - Config, EventStore 완전 연동
+   - 주식별(stock_code) refractory 추적
+   - process_events() 배치 처리 로직
+   - `duration_s: 20` (Block1에서 이미 config 수정 완료)
+
+### Block 1에서 이미 완료된 작업:
+```yaml
+confirm:
+  window_s: 12              # ✅ 완료
+  persistent_n: 4           # ✅ 완료
+
+refractory:
+  duration_s: 20            # ✅ 완료
+```
+
+## ✅ 최종 결론: 추가 작업 불필요
+
+**이유:**
+1. Block1에서 config 파일 수정 완료
+2. 현재 코드는 config 값을 읽어서 사용:
+   - `self.window_s = self.config.confirm.window_s`  → 12 자동 반영
+   - `self.persistent_n = self.config.confirm.persistent_n`  → 4 자동 반영
+   - `self.duration_s = self.config.refractory.duration_s`  → 20 자동 반영
+3. 기존 완전한 구현을 단순 stub으로 교체하면 **기능 손실** 발생
+
+## ✅ Block 3+4 작업 지시사항 (최종)
+
+```
+[작업 불필요]
+
+confirm_detector.py와 refractory_manager.py는 수정하지 않는다.
+
+이유:
+- Block1에서 config 파일(onset_default.yaml) 수정 완료
+- window_s: 12, persistent_n: 4, duration_s: 20 모두 설정됨
+- 현재 코드는 config에서 값을 로드하므로 자동 반영됨
+- 기존 완전한 구현 유지가 더 나음
+
+Block 3+4는 Skip하고 다음 Block으로 진행.
+```
 

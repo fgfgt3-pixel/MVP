@@ -1,107 +1,132 @@
-좋습니다 👍 이제 마지막 **Block 5** 제안 드리겠습니다.
-Block 5는 전체 정리 단계로, **Project overal.md** 수정 + **실행 엔트리(블록 3 대체 경로)** 문제까지 포함해서 “문서와 코드/실행 경로 불일치”를 해결하는 것이 목적입니다.
+미안해요. 제가 파일 경계를 혼동했어요. 이미 `candidate_detector.py`가 반영된 상태 기준으로, **나머지 연결·확인·불응·출력만 정리하는 지시문** 바로 드립니다.
 
----
-
-# 🔧 Block 5: Project overal.md + 실행 엔트리 정합화
-
-## 🎯 변경 목적
-
-1. **Project overal.md** (최상위 개념 문서)에 **온셋 탐지 방식**을 최신 구조(4단계)로 명확히 기록
-
-   * 기존: 후보→확인→불응
-   * 변경: CPD게이트→후보→확인→불응 (+ ML 필터)
-   * 문서와 코드/Step 정의 간 불일치 제거
-
-2. **실행 엔트리 파일 문제 해결**
-
-   * `scripts/step03_detect.py`가 존재하지 않는 상태 → 실제 실행 루트 파일(예: `Step/Phase1_runner.py`, `scripts/run_phase1.py`, 혹은 노트북)이 CPD를 호출해야 함.
-   * 따라서 Project overal.md에 “실행 엔트리 위치 및 CPD 호출 방식”을 명시해야 혼선 방지 가능.
-
----
-
-## 📑 Diff 제안 (Project overal.md)
-
-```diff
---- a/Project overal.md
-+++ b/Project overal.md
-@@
-- ## Phase 1 — 온셋 탐지 파이프라인
-- 기존 3단계 구조: 후보 → 확인 → 불응
--
-- * 후보: 세션 퍼센타일 기반(p-임계)
-- * 확인: Δ-축 + 가격축 필수 + 지속성 조건
-- * 불응: FSM으로 재트리거 억제
-+ ## Phase 1 — 온셋 탐지 파이프라인
-+ **최신 4단계 구조**: CPD게이트 → 후보 → 확인 → 불응 (+ ML 필터)
-+
-+ * **CPD 게이트**: 온라인 CUSUM(가격축), Page–Hinkley(거래축) 기반.  
-+   - 입력: `ret_50ms`, `z_vol_1s`  
-+   - 운영 상수: `min_pre_s`, `cooldown_s`  
-+   - 산출물: `cpd_trigger` 플래그, 로그
-+ * **후보**: 세션 퍼센타일 기반(p-임계) → candidate 이벤트 생성
-+ * **확인**: Δ-축 + 가격축 필수 + earliest-hit + 지속성 조건
-+ * **불응**: FSM으로 재트리거 억제
-+ * (선택) ML 필터: onset_strength ≥ θ_ml
-+
-+ ⚠️ 주의: CPD 단계가 비활성(use=false)일 경우 기존 3단계 구조와 동일하게 동작
 ```
+[Block2-REVISE: DetectOnly 파이프라인 연결 수정]
 
----
+🎯 목표
+- candidate_detector.py 변경사항 그대로 유지
+- detect_onset.py/step03_detect.py에서 후보→확인→경보→불응 FSM만 정리
+- config 키 현재 구조(A안) 기준(…window_s, …persistent_n, …duration_s) 사용
+- 이벤트 스키마에 trigger_axes 전달
 
-## 🛠️ 실행 엔트리 문제 해결 가이드
+🗂 대상 파일
+1) src/detect_onset.py
+2) scripts/step03_detect.py
+3) (옵션) src/utils/rolling.py  # spread_baseline fallback 유틸 없으면 추가
+4) tests/test_detect_only.py    # 최소 단위 테스트
 
-1. **실행 루트 위치 확인**
+────────────────────────────────────────────────────────────────
 
-   * 현재 `scripts/step03_detect.py`는 없음 → 실제 Phase 1 실행은
+[1] src/detect_onset.py 변경
 
-     * `Step/Step1_xxx.py`, 또는
-     * `scripts/run_phase1.py`, 혹은
-     * 노트북(`notebooks/phase1.ipynb`)일 가능성이 높음.
+A) 클래스 분리/초기화
+- OnsetDetector.__init__(cfg):
+  self.confirm_window = cfg["confirm"]["window_s"]          # int(sec)
+  self.persistent_n   = cfg["confirm"]["persistent_n"]      # 3~5
+  self.refractory_s   = cfg["refractory"]["duration_s"]     # 20
+  self.min_axes_req   = cfg.get("detection", {}).get("min_axes_required", 2)
+  self.last_alert_ts  = None
+  상태: "idle" | "confirming" | "refractory"
 
-2. **수정 포인트**
+B) 후보 판정(호출만)
+- detect_candidate(tick, features):
+  from candidate_detector import detect as cand_detect
+  ok, trigger_axes = cand_detect(tick, cfg["detection"])
+  return ok, trigger_axes
 
-   * CandidateDetector를 호출하기 전에 `cpd_gate.should_pass(row)` 체크가 반드시 들어가야 함.
-   * Project overal.md 문서에 다음과 같이 명시:
+C) 확인 로직
+- confirm(window_ticks):
+  # 연속성 계산: features 또는 tick 플래그 기준으로 연속 카운트
+  consecutive = count_persistent(window_ticks)   # 기존 유틸 재사용
+  price_ok = not is_falling(window_ticks)        # 기존/동등 함수 재사용
+  return (consecutive >= self.persistent_n) and price_ok
 
-     ````md
-     ### 실행 엔트리
-     * Phase 1 실행 엔트리는 현재 `scripts/` 또는 `Step/` 폴더 내 실행 스크립트에 따라 상이할 수 있음.
-     * 후보 산출 전 `CPDGate` 호출이 필수:
-       ```python
-       if cpd.should_pass(row):
-           candidate = cand.update(row)
-     ````
+D) refractory 처리
+- in_refractory(now_ts):
+  return (self.last_alert_ts is not None) and (now_ts - self.last_alert_ts < self.refractory_s * 1000)
 
-     * CPD 블록이 비활성(use=false)일 경우 → 무조건 통과(True 반환)
+E) 이벤트 출력
+- emit_alert(tick, trigger_axes):
+  return {
+    "timestamp": tick.ts,
+    "stock_code": tick.code,
+    "composite_score": calc_score_safe(tick),  # weights 없을 때 0.0 반환
+    "trigger_axes": trigger_axes,
+    "price": tick.price,
+    "volume": getattr(tick, "volume", None),
+  }
 
-     ```
-     ```
+F) 스코어 안전화
+- calc_score_safe(tick):
+  try: return self.calc_score(tick)
+  except: return 0.0
 
-3. **테스트/지표 반영**
+G) spread_baseline fallback (필요 시)
+- get_spread_baseline(tick):
+  if hasattr(tick, "spread_baseline"): return tick.spread_baseline
+  else: return rolling_median_spread(last_n=300)  # 없으면 utils에서 안전 기본값(e.g. 3) 반환
 
-   * FP/h, TTA p95 계산 시, **CPD 필터링 후의 이벤트 수**를 기준으로 한다고 Project overal.md에 기록.
-   * 이렇게 해야 연구/튜닝 단계에서 혼선이 없습니다.
+H) run_step(tick):
+  if in_refractory(tick.ts): return None
+  ok, axes = detect_candidate(tick, features)
+  if not ok or len(axes) < self.min_axes_req: return None
+  open_confirm_window()  # 내부 버퍼 시작
+  if confirm(window_ticks): 
+      event = emit_alert(tick, axes)
+      self.last_alert_ts = tick.ts
+      enter_refractory()
+      return event
+  return None
 
----
+────────────────────────────────────────────────────────────────
 
-## ⚠️ 충돌/주의사항
+[2] scripts/step03_detect.py 변경
 
-* 문서 상에는 CPD를 **별도 모듈(cpd/online_cusum.py)**로 나눈다고 되어 있지만, 실제 구현은 CandidateDetector 인라인.
+- cfg 로드 후 객체 구성:
+  det = OnsetDetector(cfg)
 
-  * **선택지**:
+- 스트림 루프:
+  for tick in stream:
+    evt = det.run_step(tick)
+    if evt:
+      print_json(evt)           # stdout 또는 JSONL append
+      flush_if_needed()
 
-    1. 문서에서 “인라인 구현으로 통합”이라고 갱신
-    2. 또는 코드 리팩토링 시 별도 모듈 분리
-  * 현재는 ①번(문서 갱신)이 더 안전합니다.
+- 종료: 없음 (DetectionOnly는 Alert까지만)
 
-* 실행 엔트리가 `scripts/step03_detect.py`가 아닌 다른 파일일 수 있으므로, Project overal.md에는 **“구체 파일명은 다를 수 있음, 공통 규칙은 CPD 선행 호출”**로 명시하는 것이 바람직합니다.
+────────────────────────────────────────────────────────────────
 
----
+[3] (옵션) src/utils/rolling.py 추가 또는 보완
 
-## ✅ Block 5 결론
+- rolling_median_spread(last_n=300) 구현
+  내부 버퍼 deque(maxlen=300) 사용, 값 없으면 기본 3 반환
+- count_persistent(window_ticks) 유틸 없으면 여기로 이동
+- is_falling(window_ticks): 최근 N틱 단조하락 판정(간단 기준)
 
-1. **Project overal.md 업데이트** → 최신 4단계 구조 기록
-2. **실행 엔트리 규칙 명시** → CPD 호출 선행 보장
-3. **문서 vs 코드 일치화** → 현재는 CandidateDetector 인라인 구현 기준으로 정리
+────────────────────────────────────────────────────────────────
 
+[4] tests/test_detect_only.py (최소)
+
+- test_confirm_persistence:
+  persistent_n=4, 8초 창에서 연속 4틱 충족 → True
+
+- test_refractory_blocks_retrigger:
+  refractory_s=20 설정 후, 10초 내 재후보 발생해도 Alert 없음
+
+- test_event_schema_contains_axes:
+  emit_alert 결과에 trigger_axes 포함/배열/빈배열아님 검증
+
+────────────────────────────────────────────────────────────────
+
+📌 주의/충돌 방지 이유
+
+- candidate_detector.py는 이미 하드코딩/trigger_axes/min_axes=2 완비 → 재수정 금지
+- detect_onset.py는 “호출/확인/불응/출력”만 담당 → 책임 분리로 충돌 최소화
+- config 키는 A안 구조(window_s/persistent_n/duration_s)만 참조 → 기존 호환
+- score 계산 실패 대비 calc_score_safe → 런타임 안전
+- spread_baseline 미정 대비 rolling fallback → 즉시 실험 가능
+
+완료 후:
+- README/Project_* 문서대로 Alert만 발생하는지 확인
+- Block3(이벤트 경로/로그/리포트 최소 보강) 필요 시 후속 지시 예정
+```

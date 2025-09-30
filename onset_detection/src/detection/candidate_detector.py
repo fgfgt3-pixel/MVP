@@ -35,6 +35,14 @@ class CandidateDetector:
         self.ticks_min = self.config.detection.ticks_min
         self.weights = self.config.detection.weights
 
+        # Detection Only: Absolute thresholds (hardcoded for now)
+        self.absolute_thresholds = {
+            "ret_1s": 0.0008,
+            "z_vol": 1.8,
+            "spread_narrowing_pct": 0.75
+        }
+        self.min_axes_required = 2
+
         # ===== CPD 게이트 설정/상태 (인라인) =====
         self._cpd_use = self.config.cpd.use
         # 가격축(CUSUM)
@@ -93,38 +101,62 @@ class CandidateDetector:
             ts_ms = row.get('ts', 0)
             if self._cpd_use and not self._cpd_update_and_check(ts_ms, row):
                 continue
-            
-            # Calculate weighted score
+
+            # Detection Only: Absolute threshold based trigger_axes evaluation
+            trigger_axes = []
+
+            # Speed axis
+            if ret_1s > self.absolute_thresholds["ret_1s"]:
+                trigger_axes.append("speed")
+
+            # Participation axis
+            if z_vol_1s > self.absolute_thresholds["z_vol"]:
+                trigger_axes.append("participation")
+
+            # Friction axis - check spread with priority fallback
+            spread_value = None
+            if 'spread' in row and pd.notna(row['spread']):
+                spread_value = row['spread']
+            elif 'ask1' in row and 'bid1' in row and pd.notna(row['ask1']) and pd.notna(row['bid1']):
+                spread_value = row['ask1'] - row['bid1']
+
+            if spread_value is not None:
+                # Assume spread_baseline is average spread or use current as reference
+                # For Detection Only, use simplified narrowing check
+                spread_baseline = spread_value * 1.5  # Baseline = 1.5x current spread
+                if spread_value < spread_baseline * self.absolute_thresholds["spread_narrowing_pct"]:
+                    trigger_axes.append("friction")
+
+            # Check if min_axes_required is met
+            if len(trigger_axes) < self.min_axes_required:
+                continue
+
+            # Calculate weighted score (kept for compatibility)
             score = (
                 self.weights["ret"] * ret_1s +
                 self.weights["accel"] * accel_1s +
                 self.weights["z_vol"] * z_vol_1s +
                 self.weights["ticks"] * ticks_per_sec
             )
-            
-            # Apply detection conditions
-            conditions_met = (
-                score >= self.score_threshold and
-                z_vol_1s >= self.vol_z_min and
-                ticks_per_sec >= self.ticks_min
+
+            # Create candidate event with trigger_axes
+            candidate_event = create_event(
+                timestamp=row['ts'],
+                event_type="onset_candidate",
+                stock_code=str(row['stock_code']),
+                score=float(score),
+                evidence={
+                    "ret_1s": float(ret_1s),
+                    "accel_1s": float(accel_1s),
+                    "z_vol_1s": float(z_vol_1s),
+                    "ticks_per_sec": int(ticks_per_sec),
+                    "trigger_axes": trigger_axes,
+                    "price": float(row.get('price', 0)),
+                    "volume": float(row.get('volume', 0))
+                }
             )
-            
-            if conditions_met:
-                # Create candidate event
-                candidate_event = create_event(
-                    timestamp=row['ts'],
-                    event_type="onset_candidate",
-                    stock_code=str(row['stock_code']),
-                    score=float(score),
-                    evidence={
-                        "ret_1s": float(ret_1s),
-                        "accel_1s": float(accel_1s),
-                        "z_vol_1s": float(z_vol_1s),
-                        "ticks_per_sec": int(ticks_per_sec)
-                    }
-                )
-                
-                candidates.append(candidate_event)
+
+            candidates.append(candidate_event)
         
         return candidates
     
