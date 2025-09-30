@@ -1,121 +1,59 @@
-# Modify\_4.md — 온라인 추론 및 하이브리드 Confirm 결합
-
-> 목적: 학습된 ML 모델(`onset_strength`)을 실시간 파이프라인에 결합하여, 기존 룰 기반 Confirm Detector와 **하이브리드 방식**으로 동작하도록 확장.
-> 주의: 기존 Confirm Detector·학습 모듈과 충돌하지 않도록 **새 모듈 추가 및 최소 수정**으로만 구현.
+확인해 본 결과, **Step overal.md** 상에서 Phase 1 정의가 이미 존재하고 있으며, 그 안에 후보→확인→불응 3단계 흐름이 기록되어 있습니다. 따라서 CPD 게이트를 반영하려면 이 Phase 1에 새로운 Step을 추가해야 합니다.
 
 ---
 
-## 0) 변경 범위
+## 제안: Block 4 (Step overal.md 수정)
 
-* 신규: `src/online/score_onset.py` (실시간 추론)
-* 신규: `src/detection/confirm_hybrid.py` (하이브리드 Confirm Detector)
-* 수정: `config/onset_default.yaml` (ML 관련 옵션 추가)
-* 테스트: `tests/test_confirm_hybrid.py`
+### 변경 포인트
+
+1. **Phase 1 — 온셋 탐지(룰 기반)** 서두에
+   기존 “총 5 Steps” → “총 6 Steps”로 수정.
+2. **Step 1-3** (온셋 스코어 & 후보 트리거) 앞에 **Step 1-2.5 (CPD 게이트)**를 신설.
+
+   * 내용: 온라인 변화점 탐지(CUSUM, Page-Hinkley)로 **평시→급등 전환 게이트** 설정.
+   * 산출물: `cpd_trigger` 플래그, 로그 기록.
+   * 완료 기준: 장초반/드리프트 상황에서 오경보 차단, FP/h 개선.
+3. 이후 Step 번호 전부 +1씩 밀림 (1-3 → 1-4, 1-4 → 1-5 …).
 
 ---
 
-## 1) Config 확장
+### Diff 가이드 (Step overal.md)
 
-`config/onset_default.yaml`에 아래 블록 추가:
+```diff
+- # Phase 1 — 온셋 탐지(룰 기반) (총 5 Steps)
++ # Phase 1 — 온셋 탐지(룰 기반) (총 6 Steps)
 
-```yaml
-ml:
-  model_path: models/lgbm.pkl     # 학습된 모델 경로
-  threshold: 0.6                  # onset_strength ≥ threshold → 유효
-  use_hybrid_confirm: true        # true → confirm_hybrid 사용
+@@
+- **Step 1-2 | 세션 퍼센타일 임계(p95±) 계산**
++ **Step 1-2 | 세션 퍼센타일 임계(p95±) 계산**
++
++ **Step 1-2.5 | CPD 게이트 (Change Point Detection)**
++ * 작업: `src/cpd/online_cusum.py`, `src/cpd/page_hinkley.py` 활용.
++   - 입력: `ret_50ms`(가격축), `z_vol_1s`(거래축).
++   - 방법: CUSUM(k,h), Page-Hinkley(δ,λ) → 평시 대비 상태변화 탐지.
++ * 산출물: 이벤트에 `cpd_trigger` 필드 추가, 로그 기록.
++ * 완료 기준:
++   - 장 초반 Pre 데이터 부족 시 skip.
++   - 오경보↓, 탐지율 유지, FP/h 개선 수치 리포트 포함.
+
+- **Step 1-3 | 온셋 스코어 & 후보 트리거**
++ **Step 1-4 | 온셋 스코어 & 후보 트리거**
+
+- **Step 1-4 | 확인창 확정**
++ **Step 1-5 | 확인창 확정**
+
+- **Step 1-5 | 불응 FSM**
++ **Step 1-6 | 불응 FSM**
 ```
 
-**이유**
+---
 
-* 모델 파일 경로 지정 필요
-* threshold는 onset\_strength 기반 필터를 추가할지 결정하는 핵심
-* use\_hybrid\_confirm 플래그로 기존 confirm\_detector와의 충돌 방지
+### 충돌/주의사항
+
+* **번호 변경**: Phase 1의 Step 전체 번호가 하나씩 밀리므로, 이후 Phase 문서에서 이 Step을 참조하는 경우 동기화 필요.
+* **산출물 경로**: `reports/` 산출물 파일명 충돌 없음 (신규 `cpd_trigger` 로그만 추가).
+* **실행 스크립트 영향**: `scripts/step03_detect.py`가 이 CPD 모듈을 호출해야 하므로, Step 정의와 코드 수정이 반드시 짝을 이뤄야 함.
 
 ---
 
-## 2) 온라인 추론 모듈 (`src/online/score_onset.py`)
-
-### 기능
-
-* 입력: features DataFrame (윈도우 피처 포함)
-* 출력: onset\_strength (0\~1) 컬럼 추가
-
-### 로직
-
-1. 모델 로드: `model = model_store.load_model(cfg.ml.model_path)`
-2. features drop: config에 정의된 drop\_columns 사용
-3. `onset_strength = model.predict_proba(X)[:,1]`
-4. DataFrame에 `onset_strength` 컬럼 추가 후 반환
-
-**이유**
-
-* 예측 확률 기반으로 onset 강도를 수치화
-* 기존 DataFrame 확장 방식으로 호환성 유지
-
----
-
-## 3) 하이브리드 Confirm Detector (`src/detection/confirm_hybrid.py`)
-
-### 기능
-
-* 룰 기반 Confirm Detector 결과에 ML onset\_strength 조건 추가
-
-### 로직
-
-1. cand 이벤트 시점 이후 window\_s 내 features+onset\_strength 확보
-2. 기존 룰 기반 축 판정 결과(hit 여부) 확인
-3. onset\_strength ≥ cfg.ml.threshold 조건 추가
-4. 최종 조건:
-
-   * 가격 축 충족 (필수)
-   * min\_axes 이상 충족
-   * onset\_strength ≥ threshold
-
-### 출력 이벤트 필드
-
-* 기존 confirm 이벤트 구조 동일
-* `onset_strength` 필드 추가
-* `hybrid_used: true` 플래그 기록
-
-**이유**
-
-* 하위 호환성 유지: 기존 confirm 이벤트 처리 로직 그대로 동작
-* 추가 필드로만 ML 확률을 노출
-
----
-
-## 4) 테스트 (`tests/test_confirm_hybrid.py`)
-
-* 케이스1: 룰 충족 + onset\_strength ≥ threshold → 확정 이벤트 생성
-* 케이스2: 룰 충족 + onset\_strength < threshold → 미확정
-* 케이스3: 가격 축 미충족 → onset\_strength 높아도 미확정
-* 케이스4: use\_hybrid\_confirm=false → 기존 confirm\_detector와 동일 결과
-
----
-
-## 5) 실행·검증 (필수 단계만)
-
-1. 모델 학습/저장 완료된 상태에서 실행:
-
-   ```bash
-   python scripts/confirm_test.py \
-     --features data/features/sample_withwin.csv \
-     --cands data/events/sample_candidates.jsonl \
-     --config config/onset_default.yaml
-   ```
-2. 결과 이벤트 JSONL에서:
-
-   * `onset_strength` 필드 존재 여부 확인
-   * confirm 수가 threshold 조정에 따라 변동하는지 확인
-
----
-
-## 6) 완료 기준
-
-* onset\_strength 컬럼 정상 생성 (`0~1` 확률값)
-* 하이브리드 Confirm 실행 시 threshold 값에 따라 confirm 수 변화 확인
-* 기존 confirm\_detector와 충돌 없음 (플래그로 제어 가능)
-
----
-
-👉 이 Modify\_4까지 적용하면 **실시간 추론 + 하이브리드 Confirm 구조**가 완성됩니다.
+👉 이렇게 하면 Step overal.md 상에서 Phase 1이 **CPD 게이트 → 후보 → 확인 → 불응**으로 확장됩니다.

@@ -1,47 +1,68 @@
-
-* **기존 44개 지표**: 기술적 지표(11) + 호가데이터(8) + 호가수량(8) + 고급지표(6) + 기본컬럼(11쯤 포함).
-* **새로 확인된 47개 지표**: 기존 44개는 그대로 포함하면서, 추가 계산 중 **衍生 지표 3개**가 더 붙은 상태예요.
-  → 보통은 슬라이딩 윈도우, Δ(변화율), 혹은 조합 지표가 자동으로 추가되면서 컬럼 수가 늘어납니다.
-  → 실제로 이번 csv 헤더를 보면 `inter_trade_time`, `imbalance_1s`, `OFI_1s` 같은 컬럼이 새롭게 붙은 걸로 보입니다.
+좋습니다 👍 블록 2는 **config 파라미터 확장** 단계입니다.
+현재 프로젝트에서는 `config/onset_default.yaml`이 임계값(p95, 확인창, 불응 등)을 정의하고 있어요. 여기에 **cpd 블록**을 추가하면 됩니다.
 
 ---
 
-## 2. 문제 없는가?
+# 🔧 블록 2: `config/onset_default.yaml` 수정
 
-* **문제 없음**: 기존 44개를 모두 포함하면서, 추가된 3개가 새롭게 들어온 상황.
-* 단, 중요한 건 “코드/설계 문서(Project_root.md, Step overal.md 등)”와 실제 csv의 컬럼 수가 불일치할 수 있다는 점이에요.
+## 🎯 변경 목적
 
-  * 문서에는 44개 기준으로 적혀 있는데, 실제 데이터는 47개 → 혼동 위험.
-  * ML 학습 시 feature importance 계산 시에 "예상치 못한 컬럼"으로 경고 나올 수 있음.
-
----
-
-## 3. 권장 방향
-
-1. **문서 업데이트**
-
-   * Project_root.md, Step overal.md에 “총 47개 지표(기존 44 + 신규 3)”로 업데이트 필요.
-   * 신규 3개를 명확히 표기: `inter_trade_time`, `imbalance_1s`, `OFI_1s`.
-
-2. **코드 영향 점검**
-
-   * `src/prep.py` 또는 feature 생성 모듈에서 hard-coded feature list(44개 고정)로 되어있다면 수정 필요.
-   * 자동으로 `df.columns`에서 feature 추출하는 구조라면 그대로 둬도 문제 없음.
-
-3. **학습/백테스트 영향**
-
-   * 지표가 늘어난 건 긍정적이에요 → 더 풍부한 신호.
-   * 다만 기존 모델과 결과 비교할 때 “44 vs 47 지표” 차이를 기록해야 추적 가능.
+* CPD 게이트 관련 파라미터를 YAML 설정에 추가
+* 기존 키(`p95`, `confirm_window`, `refractory`)와 충돌 없이, 새로운 블록(`cpd`)으로만 확장
+* `CandidateDetector`(블록 1 수정판)에서 바로 참조 가능
 
 ---
 
-✅ **정리 결론**
+## 📑 Diff 제안 (패턴 기반)
 
-* 큰 문제 없음 → 47개 지표로 진행해도 됩니다.
-* 다만 문서와 코드에서 “44개”라고 고정된 부분은 반드시 업데이트해야 합니다.
-* 신규 3개는 온셋 탐지에서 중요한 후보 지표가 될 수 있으므로 유지 권장.
+```diff
+--- a/config/onset_default.yaml
++++ b/config/onset_default.yaml
+@@
+ # 온셋 탐지 기본 파라미터
+ confirm_window_s: 20        # 확인창 길이(초)
+ refractory_s: 90            # 불응 기간(초)
+ p_threshold: 0.95           # p-임계 (세션별 계산)
++
++# --- CPD 게이트 (변화점 탐지) ---
++cpd:
++  use: true                  # CPD 게이트 활성화 여부
++  price:                     # 가격축 (CUSUM)
++    k_sigma: 0.7             # drift = σ * k_sigma
++    h_mult: 6.0              # 임계 = drift * h_mult
++    min_pre_s: 10            # 장초반 보호용 최소 프리 윈도우(sec)
++  volume:                    # 거래축 (Page–Hinkley)
++    delta: 0.05              # 허용 변화치
++    lambda: 6.0              # 임계
++  cooldown_s: 3.0            # 발화 후 재트리거 최소 대기시간(sec)
+```
 
 ---
 
-최종 47개 지표 내역
-time stock_code current_price volume ma5 rsi14 disparity stoch_k stoch_d vol_ratio z_vol obv_delta spread bid_ask_imbalance accel_delta ret_1s ask1 ask2 ask3 ask4 ask5 bid1 bid2 bid3 bid4 bid5 ask1_qty ask2_qty ask3_qty ask4_qty ask5_qty bid1_qty bid2_qty bid3_qty bid4_qty bid5_qty z_vol_1s mid_price ticks_per_sec inter_trade_time microprice microprice_slope up_tape_ratio imbalance_1s spread_narrowing OFI_1s ret_accel
+## 🛠️ 수정 가이드
+
+1. **cpd 블록 추가**
+
+   * `use`: 게이트 on/off
+   * `price`: CUSUM 파라미터(k_sigma, h_mult, min_pre_s)
+   * `volume`: Page–Hinkley 파라미터(delta, lambda)
+   * `cooldown_s`: 발화 후 재트리거 보호
+
+2. **기존 키 보존**
+
+   * `confirm_window_s`, `refractory_s`, `p_threshold` 등 기존 값은 그대로 둡니다.
+   * CPD 관련 키를 완전히 독립 블록으로 추가했기 때문에 충돌 없음.
+
+3. **호환성**
+
+   * 블록 1에서 `cfg.get("cpd", {})`로 읽기 때문에,
+     기존 YAML에 `cpd` 블록이 없으면 자동으로 **비활성 모드(use=False)**로 동작 → 레거시 코드 영향 없음.
+
+---
+
+## ⚠️ 주의사항
+
+* 실제 YAML에는 **들여쓰기**가 중요합니다. `cpd:` 블록은 루트 레벨(탑 레벨 키)로 추가해야 합니다.
+* 스펙상 float/int 혼용 가능하지만, 불필요한 따옴표는 붙이지 않는 게 안전합니다.
+
+---

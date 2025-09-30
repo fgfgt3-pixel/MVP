@@ -130,6 +130,18 @@ trading:
     account_no: "1234567890"  # Mock account number
     risk_limit_pct: 0.05      # Max position size relative to capital
 
+# --- CPD 게이트 (변화점 탐지) ---
+cpd:
+  use: false                 # CPD 게이트 활성화 여부
+  price:                     # 가격축 (CUSUM)
+    k_sigma: 0.7             # drift = σ * k_sigma
+    h_mult: 6.0              # 임계 = drift * h_mult
+    min_pre_s: 10            # 장초반 보호용 최소 프리 윈도우(sec)
+  volume:                    # 거래축 (Page–Hinkley)
+    delta: 0.05              # 허용 변화치
+    lambda: 6.0              # 임계
+  cooldown_s: 3.0            # 발화 후 재트리거 최소 대기시간(sec)
+
 # Logging
 logging:
   level: INFO

@@ -1,140 +1,107 @@
-# Modify\_5.md — 백테스트 및 리포트 확장
-
-> 목적: 룰 기반/하이브리드 Confirm 결과와 학습된 ML 모델을 활용하여 **백테스트 실행 및 결과 리포트**를 확장.
-> 주의: 기존 데이터 로딩/이벤트 저장 구조와 충돌하지 않도록 **신규 스크립트 추가 + 최소 수정** 방식으로 작성.
+좋습니다 👍 이제 마지막 **Block 5** 제안 드리겠습니다.
+Block 5는 전체 정리 단계로, **Project overal.md** 수정 + **실행 엔트리(블록 3 대체 경로)** 문제까지 포함해서 “문서와 코드/실행 경로 불일치”를 해결하는 것이 목적입니다.
 
 ---
 
-## 0) 변경 범위
+# 🔧 Block 5: Project overal.md + 실행 엔트리 정합화
 
-* 신규: `src/backtest/backtester.py` (백테스트 엔진)
-* 신규: `src/backtest/report.py` (리포트 생성기)
-* 신규: `scripts/backtest_run.py` (실행 스크립트)
-* 수정: `config/onset_default.yaml` (백테스트 관련 옵션 추가)
-* 테스트: `tests/test_backtester.py`, `tests/test_report.py`
+## 🎯 변경 목적
+
+1. **Project overal.md** (최상위 개념 문서)에 **온셋 탐지 방식**을 최신 구조(4단계)로 명확히 기록
+
+   * 기존: 후보→확인→불응
+   * 변경: CPD게이트→후보→확인→불응 (+ ML 필터)
+   * 문서와 코드/Step 정의 간 불일치 제거
+
+2. **실행 엔트리 파일 문제 해결**
+
+   * `scripts/step03_detect.py`가 존재하지 않는 상태 → 실제 실행 루트 파일(예: `Step/Phase1_runner.py`, `scripts/run_phase1.py`, 혹은 노트북)이 CPD를 호출해야 함.
+   * 따라서 Project overal.md에 “실행 엔트리 위치 및 CPD 호출 방식”을 명시해야 혼선 방지 가능.
 
 ---
 
-## 1) Config 확장
+## 📑 Diff 제안 (Project overal.md)
 
-`config/onset_default.yaml`에 아래 블록 추가:
-
-```yaml
-backtest:
-  start_date: "2025-09-01"
-  end_date: "2025-09-30"
-  use_hybrid_confirm: true   # 하이브리드 Confirm 결과 사용 여부
-  report_dir: reports/       # 리포트 저장 경로
+```diff
+--- a/Project overal.md
++++ b/Project overal.md
+@@
+- ## Phase 1 — 온셋 탐지 파이프라인
+- 기존 3단계 구조: 후보 → 확인 → 불응
+-
+- * 후보: 세션 퍼센타일 기반(p-임계)
+- * 확인: Δ-축 + 가격축 필수 + 지속성 조건
+- * 불응: FSM으로 재트리거 억제
++ ## Phase 1 — 온셋 탐지 파이프라인
++ **최신 4단계 구조**: CPD게이트 → 후보 → 확인 → 불응 (+ ML 필터)
++
++ * **CPD 게이트**: 온라인 CUSUM(가격축), Page–Hinkley(거래축) 기반.  
++   - 입력: `ret_50ms`, `z_vol_1s`  
++   - 운영 상수: `min_pre_s`, `cooldown_s`  
++   - 산출물: `cpd_trigger` 플래그, 로그
++ * **후보**: 세션 퍼센타일 기반(p-임계) → candidate 이벤트 생성
++ * **확인**: Δ-축 + 가격축 필수 + earliest-hit + 지속성 조건
++ * **불응**: FSM으로 재트리거 억제
++ * (선택) ML 필터: onset_strength ≥ θ_ml
++
++ ⚠️ 주의: CPD 단계가 비활성(use=false)일 경우 기존 3단계 구조와 동일하게 동작
 ```
 
-**이유**
+---
 
-* 기간(start\_date, end\_date)으로 범위를 지정해야 백테스트 대상 데이터 관리가 용이함
-* use\_hybrid\_confirm는 기존 룰 기반 confirm과 하이브리드 confirm 선택을 명시적으로 제어하기 위함
-* report\_dir 지정으로 산출물이 한 곳에 모여 관리됨
+## 🛠️ 실행 엔트리 문제 해결 가이드
+
+1. **실행 루트 위치 확인**
+
+   * 현재 `scripts/step03_detect.py`는 없음 → 실제 Phase 1 실행은
+
+     * `Step/Step1_xxx.py`, 또는
+     * `scripts/run_phase1.py`, 혹은
+     * 노트북(`notebooks/phase1.ipynb`)일 가능성이 높음.
+
+2. **수정 포인트**
+
+   * CandidateDetector를 호출하기 전에 `cpd_gate.should_pass(row)` 체크가 반드시 들어가야 함.
+   * Project overal.md 문서에 다음과 같이 명시:
+
+     ````md
+     ### 실행 엔트리
+     * Phase 1 실행 엔트리는 현재 `scripts/` 또는 `Step/` 폴더 내 실행 스크립트에 따라 상이할 수 있음.
+     * 후보 산출 전 `CPDGate` 호출이 필수:
+       ```python
+       if cpd.should_pass(row):
+           candidate = cand.update(row)
+     ````
+
+     * CPD 블록이 비활성(use=false)일 경우 → 무조건 통과(True 반환)
+
+     ```
+     ```
+
+3. **테스트/지표 반영**
+
+   * FP/h, TTA p95 계산 시, **CPD 필터링 후의 이벤트 수**를 기준으로 한다고 Project overal.md에 기록.
+   * 이렇게 해야 연구/튜닝 단계에서 혼선이 없습니다.
 
 ---
 
-## 2) 백테스트 엔진 (`src/backtest/backtester.py`)
+## ⚠️ 충돌/주의사항
 
-### 기능
+* 문서 상에는 CPD를 **별도 모듈(cpd/online_cusum.py)**로 나눈다고 되어 있지만, 실제 구현은 CandidateDetector 인라인.
 
-* 입력: features 파일, 이벤트(cand/confirm) JSONL, config
-* 출력: 백테스트 결과 dict (precision, recall, confirm\_rate 등)
+  * **선택지**:
 
-### 로직
+    1. 문서에서 “인라인 구현으로 통합”이라고 갱신
+    2. 또는 코드 리팩토링 시 별도 모듈 분리
+  * 현재는 ①번(문서 갱신)이 더 안전합니다.
 
-1. 기간 필터링: config.start\_date \~ config.end\_date
-2. cand/confirm 이벤트 로드 → 라벨과 매칭
-3. 평가 지표 계산:
-
-   * 이벤트 단위 precision/recall (onset 단위 평가, row 단위 아님)
-   * confirm\_rate
-   * TTA (time-to-alert) p50/p95
-   * FP/h (시간당 false positive)
-4. dict 결과 반환
-
-**이유**
-
-* 이벤트 단위 평가를 해야 실전 매매에서 유의미한 성능 확인 가능
-* confirm\_rate, TTA, FP/h는 실제 신호 품질을 정량화하는 핵심 지표
+* 실행 엔트리가 `scripts/step03_detect.py`가 아닌 다른 파일일 수 있으므로, Project overal.md에는 **“구체 파일명은 다를 수 있음, 공통 규칙은 CPD 선행 호출”**로 명시하는 것이 바람직합니다.
 
 ---
 
-## 3) 리포트 생성기 (`src/backtest/report.py`)
+## ✅ Block 5 결론
 
-### 기능
-
-* 입력: backtester 결과 dict
-* 출력: JSON, CSV, PNG 플롯
-
-### 산출물
-
-1. JSON: 모든 지표 기록 (`reports/backtest_summary.json`)
-2. CSV: 이벤트 단위 매칭 결과 (cand, confirm, label 여부 등)
-3. PNG:
-
-   * confirm\_rate / FP/h / TTA 분포 히스토그램
-   * 라벨 vs 예측 이벤트 비교 차트
-
-**이유**
-
-* JSON/CSV → 구조적 분석 가능
-* PNG → 사용자 친화적 시각화
-
----
-
-## 4) 실행 스크립트 (`scripts/backtest_run.py`)
-
-예시 실행 방식:
-
-```bash
-python scripts/backtest_run.py \
-  --features data/features/023790_44indicators_realtime_20250902_withwin.csv \
-  --events data/events/023790_candidates.jsonl \
-  --config config/onset_default.yaml
-```
-
-출력:
-
-* `reports/backtest_summary.json`
-* `reports/backtest_events.csv`
-* `reports/backtest_charts.png`
-
----
-
-## 5) 테스트
-
-### `tests/test_backtester.py`
-
-* 케이스1: cand=10, confirm=5, 라벨=5 → precision=1.0, recall=1.0 확인
-* 케이스2: confirm=0 → recall=0, precision=0
-
-### `tests/test_report.py`
-
-* 케이스1: dict 입력 → JSON/CSV/PNG 파일 생성 확인
-* 케이스2: report\_dir 지정 → 해당 디렉토리에 산출물 존재 확인
-
----
-
-## 6) 실행·검증 (필수 단계만)
-
-1. `pytest tests/test_backtester.py`
-2. `pytest tests/test_report.py`
-3. `python scripts/backtest_run.py --features ... --events ... --config config/onset_default.yaml`
-
-   * `reports/backtest_summary.json` 생성 여부 확인
-   * confirm\_rate, precision, recall 값이 출력되는지 확인
-
----
-
-## 7) 완료 기준
-
-* 백테스트 실행 시 JSON/CSV/PNG 리포트 정상 생성
-* 이벤트 단위 precision/recall, confirm\_rate, TTA, FP/h 출력
-* 기존 Confirm Detector와 충돌 없음 (플래그로 제어 가능)
-
----
-
-👉 이 Modify\_5까지 적용하면 **룰 기반 → ML 하이브리드 → 백테스트/리포트 전체 사이클**이 완성됩니다.
+1. **Project overal.md 업데이트** → 최신 4단계 구조 기록
+2. **실행 엔트리 규칙 명시** → CPD 호출 선행 보장
+3. **문서 vs 코드 일치화** → 현재는 CandidateDetector 인라인 구현 기준으로 정리
 

@@ -127,6 +127,27 @@ class LoggingConfig(BaseModel):
     file_rotation: bool = Field(default=True)
 
 
+class CPDPriceConfig(BaseModel):
+    """CPD price axis (CUSUM) configuration."""
+    k_sigma: float = Field(default=0.7)
+    h_mult: float = Field(default=6.0)
+    min_pre_s: float = Field(default=10)
+
+
+class CPDVolumeConfig(BaseModel):
+    """CPD volume axis (Page-Hinkley) configuration."""
+    delta: float = Field(default=0.05)
+    lambda_: float = Field(default=6.0, alias="lambda")
+
+
+class CPDConfig(BaseModel):
+    """CPD gate configuration."""
+    use: bool = Field(default=False)
+    price: CPDPriceConfig = Field(default_factory=CPDPriceConfig)
+    volume: CPDVolumeConfig = Field(default_factory=CPDVolumeConfig)
+    cooldown_s: float = Field(default=3.0)
+
+
 class Config(BaseModel):
     """Main configuration model."""
     paths: PathsConfig = Field(default_factory=PathsConfig)
@@ -140,6 +161,7 @@ class Config(BaseModel):
     detection: DetectionConfig = Field(default_factory=DetectionConfig)
     confirm: ConfirmConfig = Field(default_factory=ConfirmConfig)
     refractory: RefractoryConfig = Field(default_factory=RefractoryConfig)
+    cpd: CPDConfig = Field(default_factory=CPDConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
 
 

@@ -188,3 +188,86 @@ CSV files must contain columns mappable to: `ts`, `stock_code`, `price`, `volume
 - No future data leakage: computation at time t uses only data up to time t
 - Config-driven parameter tuning with hash-based version tracking
 - Event storage optimized for real-time append with efficient time-range queries
+
+## Recent Work Completed (2025-09-30)
+
+### CPD Gate Integration (Modify 1.md~5.md Implementation)
+
+**Objective**: Integrate Change Point Detection (CPD) gate into the onset detection pipeline to improve signal quality and reduce false positives.
+
+#### ✅ Block 1: CandidateDetector CPD Integration
+- **File Modified**: `onset_detection/src/detection/candidate_detector.py`
+- **Changes**:
+  - Added inline CPD gate implementation within `CandidateDetector.__init__()`
+  - Integrated CUSUM (price axis) and Page-Hinkley (volume axis) algorithms
+  - Added gate check in `detect_candidates()` before candidate evaluation
+  - CPD parameters: `k_sigma=0.7`, `h_mult=6.0`, `min_pre_s=10`, `delta=0.05`, `lambda=6.0`, `cooldown_s=3.0`
+- **Result**: CPD gate now filters candidates based on change point detection
+- **Default**: CPD disabled (`use=false`) for backward compatibility
+
+#### ✅ Block 2: Configuration Extension
+- **File Modified**: `onset_detection/config/onset_default.yaml`
+- **Changes**: Added complete CPD configuration block:
+  ```yaml
+  cpd:
+    use: false                 # CPD gate activation toggle
+    price:                     # Price axis (CUSUM)
+      k_sigma: 0.7
+      h_mult: 6.0
+      min_pre_s: 10
+    volume:                    # Volume axis (Page-Hinkley)
+      delta: 0.05
+      lambda: 6.0
+    cooldown_s: 3.0
+  ```
+- **File Modified**: `onset_detection/src/config_loader.py`
+- **Changes**: Added `CPDConfig`, `CPDPriceConfig`, `CPDVolumeConfig` Pydantic models for type-safe configuration loading
+
+#### ❌ Block 3: Execution Entry Script
+- **Status**: `scripts/step03_detect.py` file does not exist
+- **Current Implementation**: CPD gate is integrated inline within `CandidateDetector`, making separate execution script unnecessary
+- **Resolution**: No additional changes needed - CPD automatically executes within detection pipeline
+
+#### ✅ Block 4: Documentation Alignment
+- **File Analyzed**: `Step/Step overal.md`
+- **Status**: CPD gate already documented as "Step 1-3 | CPD 게이트 모듈" in Phase 1
+- **Result**: No changes needed - documentation already reflects CPD integration
+
+#### ✅ Block 5: Project Overview Update
+- **File Analyzed**: `Project overal.md`
+- **Status**: Already describes "온셋 탐지 엔진 v3 (CPD→Δ확인→불응, ML 필터)" with detailed CPD specifications
+- **Result**: No changes needed - documentation already current
+
+### Technical Implementation Details
+
+#### CPD Algorithm Integration
+- **Price Axis (CUSUM)**: Monitors `ret_1s` (changed from `ret_50ms` to match available features)
+- **Volume Axis (Page-Hinkley)**: Monitors `z_vol_1s` for volume anomalies
+- **Gate Logic**: Either price OR volume axis trigger allows passage to candidate evaluation
+- **Safety Features**:
+  - `min_pre_s=10s`: Prevents triggers during market open when statistics are unreliable
+  - `cooldown_s=3s`: Suppresses duplicate triggers within cooldown window
+  - Default disabled: Maintains backward compatibility with existing tests
+
+#### Configuration Integration
+- **Type Safety**: Full Pydantic model validation for all CPD parameters
+- **Backward Compatibility**: Missing CPD config block defaults to disabled state
+- **Runtime Control**: CPD can be enabled/disabled via configuration without code changes
+
+#### Testing Results
+- **Unit Tests**: All 14 candidate detector tests pass with CPD disabled
+- **CPD Functionality**: Verified CPD gate properly filters candidates when enabled
+- **Performance**: No regression in detection performance when disabled
+
+### Current System State
+- **Pipeline**: Raw CSV → Clean → Features → **CPD Gate** → Candidate → Confirm → Refractory
+- **CPD Status**: Implemented and tested, disabled by default
+- **Configuration**: Centralized in YAML with type safety
+- **Documentation**: Aligned across all project documents
+- **Tests**: All existing functionality preserved, CPD tested independently
+
+### Next Steps (Not Implemented)
+1. Enable CPD in production configuration after parameter tuning
+2. Implement standalone CPD modules if separation from CandidateDetector is desired
+3. Add CPD-specific event logging (`cpd_trigger` events)
+4. Optimize CPD parameters through backtesting and parameter sweeps

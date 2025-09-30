@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from typing import List, Dict, Any, Optional
 from pathlib import Path
+from math import inf
 
 from ..config_loader import Config, load_config
 from ..event_store import EventStore, create_event
@@ -20,19 +21,40 @@ class CandidateDetector:
     def __init__(self, config: Optional[Config] = None, event_store: Optional[EventStore] = None):
         """
         Initialize candidate detector.
-        
+
         Args:
             config: Configuration object. If None, loads default config.
             event_store: EventStore instance. If None, creates default one.
         """
         self.config = config or load_config()
         self.event_store = event_store or EventStore()
-        
+
         # Extract detection parameters
         self.score_threshold = self.config.detection.score_threshold
         self.vol_z_min = self.config.detection.vol_z_min
         self.ticks_min = self.config.detection.ticks_min
         self.weights = self.config.detection.weights
+
+        # ===== CPD 게이트 설정/상태 (인라인) =====
+        self._cpd_use = self.config.cpd.use
+        # 가격축(CUSUM)
+        self._cusum_pos = 0.0
+        self._cusum_neg = 0.0
+        self._pre_mean = 0.0
+        self._pre_m2 = 0.0
+        self._pre_count = 0
+        self._k_sigma = self.config.cpd.price.k_sigma
+        self._h_mult = self.config.cpd.price.h_mult
+        self._min_pre_s = self.config.cpd.price.min_pre_s
+        # 거래축(Page–Hinkley)
+        self._ph_m = 0.0
+        self._ph_m_t = 0.0
+        self._ph_Mt = -inf
+        self._delta = self.config.cpd.volume.delta
+        self._lambda = self.config.cpd.volume.lambda_
+        # 공통
+        self._cooldown_s = self.config.cpd.cooldown_s
+        self._last_fire_ms = -1
     
     def detect_candidates(self, features_df: pd.DataFrame) -> List[Dict[str, Any]]:
         """
@@ -61,9 +83,15 @@ class CandidateDetector:
             accel_1s = row['accel_1s']
             z_vol_1s = row['z_vol_1s']
             ticks_per_sec = row['ticks_per_sec']
-            
+
             # Skip if any indicator is NaN or invalid
             if pd.isna(ret_1s) or pd.isna(accel_1s) or pd.isna(z_vol_1s) or pd.isna(ticks_per_sec):
+                continue
+
+            # --- CPD 게이트(선행) ---
+            # 게이트를 통과해야만 후보 산출 로직으로 진입
+            ts_ms = row.get('ts', 0)
+            if self._cpd_use and not self._cpd_update_and_check(ts_ms, row):
                 continue
             
             # Calculate weighted score
@@ -217,6 +245,57 @@ class CandidateDetector:
                 "ticks_min": self.ticks_min
             }
         }
+
+    # ===== CPD 인라인 구현 =====
+    def _pre_update(self, x):
+        self._pre_count += 1
+        d = x - self._pre_mean
+        self._pre_mean += d / self._pre_count
+        self._pre_m2 += d * (x - self._pre_mean)
+
+    def _pre_sigma(self):
+        if self._pre_count < 2:
+            return 1e-12
+        return (self._pre_m2 / (self._pre_count - 1)) ** 0.5
+
+    def _cusum_update(self, x):
+        sigma = max(self._pre_sigma(), 1e-12)
+        k = self._k_sigma * sigma
+        z = (x - self._pre_mean) / sigma
+        self._cusum_pos = max(0.0, self._cusum_pos + (z - k))
+        self._cusum_neg = min(0.0, self._cusum_neg + (z + k))  # 필요 시 하강 탐지용
+        h = self._h_mult * (k if k > 0 else 1.0)
+        return self._cusum_pos > h
+
+    def _page_hinkley_update(self, x):
+        # 평균 추정 및 누적 편차 갱신
+        self._ph_m = self._ph_m + (x - self._ph_m) / max(self._pre_count, 1)
+        self._ph_m_t = self._ph_m_t + (x - self._ph_m - self._delta)
+        self._ph_Mt = max(self._ph_Mt, self._ph_m_t)
+        return (self._ph_Mt - self._ph_m_t) > self._lambda
+
+    def _cpd_update_and_check(self, ts_ms, row):
+        # 재트리거 쿨다운
+        if self._last_fire_ms > 0 and (ts_ms - self._last_fire_ms) < self._cooldown_s * 1000:
+            return False
+        # 장초반 보호: 사전 표본 부족 시 통과시키지 않음(평시 통계만 축적)
+        # NOTE: 0.05s는 ret_50ms 기준 리샘플 힌트. 실제 dt 추정값 있으면 교체 가능.
+        if (self._pre_count * 0.05) < self._min_pre_s:
+            self._pre_update(float(row.get("ret_1s", 0.0)))  # Use ret_1s instead of ret_50ms
+            _ = self._page_hinkley_update(float(row.get("z_vol_1s", 0.0)))
+            return False
+        # 업데이트 및 트리거 판정
+        p = float(row.get("ret_1s", 0.0))  # Use ret_1s instead of ret_50ms
+        v = float(row.get("z_vol_1s", 0.0))
+        self._pre_update(p)
+        hit_price = self._cusum_update(p)
+        hit_vol = self._page_hinkley_update(v)
+        if hit_price or hit_vol:
+            self._last_fire_ms = ts_ms
+            # (선택) 디버그용: 어떤 축이 발화했는지 로깅 훅
+            print(f"[CPD] ts={ts_ms} price={hit_price} volume={hit_vol}")
+            return True
+        return False
 
 
 def detect_candidates(features_df: pd.DataFrame, config: Optional[Config] = None) -> List[Dict[str, Any]]:
