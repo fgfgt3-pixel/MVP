@@ -81,6 +81,7 @@ detection:
   score_threshold: 2.0
   vol_z_min: 2.0
   ticks_min: 2
+  min_axes_required: 2  # Minimum number of trigger_axes required for candidate
   weights:
     ret: 1.0
     accel: 1.0

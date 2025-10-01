@@ -134,7 +134,7 @@ The system is designed to maintain **identical decision logic** between offline 
 ### Detection Logic Specifics
 
 #### CPD Gate Parameters
-- **CUSUM**: `k`=0.5~1.0×평시σ(MAD 기반), `h`=4~8×k for price axis (ret_50ms/microprice_slope)
+- **CUSUM**: `k`=0.5~1.0×평시σ(MAD 기반), `h`=4~8×k for price axis (ret_1s)
 - **Page-Hinkley**: `delta`≈0.05–0.1, `lambda`≈5–10 for volume axis (z_vol_1s)
 - **Operational**: `min_pre_s` (early market protection), `cooldown_s` (re-trigger suppression)
 
@@ -241,7 +241,7 @@ CSV files must contain columns mappable to: `ts`, `stock_code`, `price`, `volume
 ### Technical Implementation Details
 
 #### CPD Algorithm Integration
-- **Price Axis (CUSUM)**: Monitors `ret_1s` (changed from `ret_50ms` to match available features)
+- **Price Axis (CUSUM)**: Monitors `ret_1s` for price change detection
 - **Volume Axis (Page-Hinkley)**: Monitors `z_vol_1s` for volume anomalies
 - **Gate Logic**: Either price OR volume axis trigger allows passage to candidate evaluation
 - **Safety Features**:

@@ -55,31 +55,43 @@ Role: 수석 소프트웨어 아키텍트
 
 **Step 1-3 (신규 앞단) | CPD 게이트 모듈**
 
-* 작업: `cpd/online_cusum.py`, `cpd/page_hinkley.py`, `detection/cpd_gate.py`
-  - 가격축(CUSUM): 입력 `ret_50ms`(또는 `microprice_slope`), 파라미터 `k,h`
+* 작업: `detection/candidate_detector.py` 내 inline CPD 게이트 구현
+  - 가격축(CUSUM): 입력 `ret_1s`, 파라미터 `k,h`
   - 거래축(Page–Hinkley): 입력 `z_vol_1s`, 파라미터 `delta, lambda`
   - 운영 상수: `min_pre_s`(장초반 보호), `cooldown_s`(재트리거 억제)
-* 산출물: 게이트 통과 시각 로그, `cpd_trigger` 플래그(이벤트 필드)
-* 완료 기준: 장초반 10s 미만 무효화, 게이트 통과 후 N초 이내 재발화 억제 로그 확인
+  - 설정: `cpd.use: false` (기본 비활성, 하위 호환성 유지)
+* 산출물: CPD 게이트 로직 통합, 설정 기반 활성화
+* 완료 기준: 장초반 10s 미만 무효화, 게이트 통과 후 N초 이내 재발화 억제, 비활성 시 기존 로직 유지
 
 **Step 1-4 | 온셋 스코어 & 후보 트리거**
 
-* 작업: `src/detect_onset.py`에서 $S_t = w_S f_S + w_P f_P + w_F f_F$ 계산, p95 임계 초과 시 **candidate** 이벤트 발생.
-* 제약: **CPD 게이트 통과 시에만** 후보를 평가
-* 산출물: `data/scores/` 또는 `data/events/*.jsonl`(candidate)
-* 완료 기준: 후보 이벤트 타임스탬프/개수 로그(게이트 연동) 확인.
+* 작업: `detection/candidate_detector.py`에서 절대 임계 기반 `trigger_axes` 평가
+  - Speed axis: `ret_1s > 0.0008`
+  - Participation axis: `z_vol_1s > 1.8`
+  - Friction axis: `spread_narrowing < 0.75`
+  - `min_axes_required: 2` 충족 시 **candidate** 이벤트 발생
+* 제약: **CPD 게이트 활성화 시에만** 게이트 통과 후 평가 (기본은 게이트 비활성)
+* 산출물: `onset_candidate` 이벤트 (trigger_axes, evidence 포함)
+* 완료 기준: features_df 입력 → candidate events 리스트 반환
 
-**Step 1-5 | 확인창(10–30s) & 확정 로직**
+**Step 1-5 | 확인창(12s) & 확정 로직 (Delta-based)**
 
-* 작업: 확인창 윈도우 내 **지속성 증거(가격/거래/호가)** ≥1 만족 시 **confirm** 이벤트로 승격.
-* 산출물: `onset_confirm` 이벤트 JSONL.
-* 완료 기준: 사용자가 지정한 급등 구간 내 최소 1회 confirm 발생(샘플 데이터 기준).
+* 작업: `detection/confirm_detector.py`에서 상대 개선(Δ) 기반 확정
+  - Pre-window (5s) baseline 계산
+  - Confirm-window (12s) 내 Delta 검증
+  - 가격 축 필수 + min_axes=2 + persistent_n=4 연속 충족
+  - Earliest-hit 방식으로 최초 시점 확정
+* 산출물: `onset_confirmed` 이벤트 (axes, onset_strength, delta 값 포함)
+* 완료 기준: features_df + candidate_events 입력 → confirmed_events 리스트 반환
 
 **Step 1-6 | 불응(Refractory) 상태기계**
 
-* 작업: confirm 후 **중복 알람 억제(60–180s)** 상태기계.
-* 산출물: `refractory_enter/exit` 이벤트, 상태 로그.
-* 완료 기준: 동일 구간 중복 알람 없음.
+* 작업: `detection/refractory_manager.py`에서 종목별 불응기 관리
+  - Duration: 20초 (Detection Only 단축)
+  - 종목별(stock_code) 분리 관리
+  - `extend_on_confirm: true` 설정
+* 산출물: `onset_rejected_refractory` 이벤트 (차단된 candidate)
+* 완료 기준: 동일 종목 내 refractory 기간 중 candidate 차단 확인
 
 **Step 1-7 | (선택) ML 임계 결합**
 

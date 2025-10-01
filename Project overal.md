@@ -120,8 +120,9 @@
   * (있으면) 추가 호가 레벨/체결 방향/기존 47지표.
 * **모듈**
 
-  * `replay_engine`: 1틱씩 순차 처리(미래 미사용), 1초 리샘플 스트림 생성.
-  * `config`: 윈도우/임계/불응/확인창/가중치 전부 YAML.
+  * `data_loader`: CSV/JSONL → DataFrame 변환 (timezone-aware, 정렬 보장)
+  * `features/core_indicators`: DataFrame 기반 피처 계산 (streaming-compatible)
+  * `config_loader`: YAML 기반 설정 로딩 (Pydantic 모델, `config_hash` 주입)
   * `logging+version`: `metadata/versions.json`, `config_hash` 주입.
 * **산출물**
 
@@ -134,26 +135,36 @@
 
 ## Phase 1 — 온셋 탐지 엔진 v3 (CPD→Δ확인→불응, ML 필터)
 
-**목적**: “사람이 차트에서 느끼는 급등 시작”을 **속도/참여/마찰** 세 축으로 수치화하여 **첫 관통**을 포착.
+**목적**: "사람이 차트에서 느끼는 급등 시작"을 **속도/참여/마찰** 세 축으로 수치화하여 **첫 관통**을 포착.
 
-* **스트리밍 피처(초단위, 실시간 계산)**
+* **입력 구조**: CSV/JSONL 기반 DataFrame (배치 처리)
+* **파이프라인**: `OnsetPipelineDF.run_batch(features_df)` → confirmed events
+
+* **피처 계산(DataFrame 기반, streaming-compatible)**
 
   * **Speed**: `ret_1s`, `Δret_1s`, (선택) 1초 캔들 바디/윅 비율.
   * **Participation**: `z_vol_1s`, `ticks_per_sec`, **체결 간격↓**, `up_tape_ratio`, (가능 시) `OFI_1s`.
   * **Friction**: `spread`, `spread_narrowing`, `bid_ask_imbalance`, `micro_price_momentum`.
   * **표준화**: **숏/롱 롤링**(값은 Phase 3에서 스윕) + **세션별 퍼센타일**(오전/점심/오후).
-* **탐지 로직(3중 구조)**
-  * **(1) CPD 게이트(필수)**:
-    - 가격축: **CUSUM**(입력 예: `ret_50ms` 또는 `microprice_slope`) with `k`=0.5~1.0×평시σ(MAD 기반), `h`=4~8×k
-    - 거래축: **Page–Hinkley**(입력 예: `z_vol_1s`) with `delta`≈0.05–0.1, `lambda`≈5–10
+* **탐지 로직(4단계 구조)**
+  * **(1) CPD 게이트(선택, 기본 비활성)**:
+    - 가격축: **CUSUM**(입력: `ret_1s`) with `k`=0.5~1.0×평시σ(MAD 기반), `h`=4~8×k
+    - 거래축: **Page–Hinkley**(입력: `z_vol_1s`) with `delta`≈0.05–0.1, `lambda`≈5–10
     - **게이트 통과 시에만** 후속 단계 진행(장초반 `min_pre_s` 확보, `cooldown_s` 적용).
-  * **(2) 후보 산출**: `S_t = wS*Speed + wP*Participation + wF*Friction` ≥ **세션별 p-임계**
-  * **확인(확정)**: **절대 임계 기반**에서 **상대 개선(Δ) 기반 + 가격 축 필수 + earliest-hit + 연속성(persistent_n)**으로 전환.
-    - 가격 축(필수): `(ret_1s > θ_ret) OR (microprice_slope > 0)`
-    - 거래 축: `z_vol_1s ≥ (pre_mean + Δ_zvol_min)` 또는 절대 하한 `≥ zvol_abs_min`
-    - 마찰 축: `spread_now`가 `pre_mean_spread` 대비 **상대 축소(≤ spread_rel_pct)** 또는 **절대 축소(≥ spread_drop_abs)`
-    - 최종 판정: 가격 축을 반드시 포함하여 **min_axes 이상**이 **연속 `persistent_n`개** 충족되는 **최초 시점(earliest-hit)**을 확정시각으로 사용
-  * **불응(Refractory)**: 60–180초(변동성/세션에 따라 가변).
+    - 설정: `cpd.use: false` (기본값)
+  * **(2) 후보 산출 (CandidateDetector)**: 절대 임계 기반 trigger_axes 평가
+    - `ret_1s > 0.0008`, `z_vol_1s > 1.8`, `spread_narrowing < 0.75`
+    - `min_axes_required: 2` (기본값)
+  * **(3) 확인 (ConfirmDetector)**: **상대 개선(Δ) 기반 + 가격 축 필수 + earliest-hit + 연속성(persistent_n)**
+    - Pre-window (5초) vs Confirm-window (12초) 비교
+    - 가격 축(필수): `delta_ret ≥ 0.0001` OR `delta_microprice_slope ≥ 0.0001`
+    - 거래 축: `delta_zvol ≥ 0.1`
+    - 마찰 축: `delta_spread (pre - now) ≥ 0.0001`
+    - 최종 판정: 가격 축 필수 + **min_axes=2 이상**이 **연속 persistent_n=4개** 충족되는 **최초 시점(earliest-hit)**
+    - 설정: `confirm.window_s: 12`, `confirm.persistent_n: 4`, `confirm.exclude_cand_point: true`
+  * **(4) 불응(RefractoryManager)**: 20초 (Detection Only 단축)
+    - 종목별(stock_code) 관리
+    - 설정: `refractory.duration_s: 20`, `refractory.extend_on_confirm: true`
   * **확장(옵션) — 온셋 구간(시작→Peak) 세그먼터**: confirm 시점부터 시작하며, (i) 롤링 고점이 더 이상 갱신되지 않거나, (ii) 고점대비 드로다운 ≥ *dd_stop_pct* (예: 0.8–1.5%), (iii) 거래/마찰이 평시로 복귀(z_vol↓, spread↑) 중 먼저 오는 조건에서 **종료**(안전장치 *max_hold_s* 적용).
   * **이벤트 단계 타입 표준**: `onset_candidate` → `onset_confirm_inprogress` → `onset_confirmed` → `refractory_enter/exit` (시각화·리포팅 동일 키 사용).
 * **산출물**
