@@ -1,0 +1,82 @@
+{
+  "files": [
+    {
+      "file": "023790_44indicators_realtime_20250901_clean.csv",
+      "candidates": 9655,
+      "fp_per_hour": 1939.7082122573622,
+      "duration_hours": 4.9775527777777775
+    },
+    {
+      "file": "023790_44indicators_realtime_20250902_clean.csv",
+      "candidates": 4854,
+      "fp_per_hour": 750.0052791883751,
+      "duration_hours": 6.471954444444444
+    },
+    {
+      "file": "049470_44indicators_realtime_20250903_clean.csv",
+      "candidates": 141,
+      "fp_per_hour": 20.388219657762285,
+      "duration_hours": 6.915758333333334
+    },
+    {
+      "file": "054540_44indicators_realtime_20250901_clean.csv",
+      "candidates": 3867,
+      "fp_per_hour": 776.1391243262681,
+      "duration_hours": 4.982354166666667
+    },
+    {
+      "file": "054540_44indicators_realtime_20250902_clean.csv",
+      "candidates": 1057,
+      "fp_per_hour": 163.37693758405902,
+      "duration_hours": 6.469701388888889
+    },
+    {
+      "file": "054540_44indicators_realtime_20250903_clean.csv",
+      "candidates": 697,
+      "fp_per_hour": 100.30012890877,
+      "duration_hours": 6.949143611111111
+    },
+    {
+      "file": "097230_44indicators_realtime_20250902_clean.csv",
+      "candidates": 810,
+      "fp_per_hour": 125.15972780592035,
+      "duration_hours": 6.471730277777778
+    },
+    {
+      "file": "097230_44indicators_realtime_20250903_clean.csv",
+      "candidates": 769,
+      "fp_per_hour": 110.59874695502882,
+      "duration_hours": 6.9530625
+    },
+    {
+      "file": "208640_44indicators_realtime_20250903_clean.csv",
+      "candidates": 692,
+      "fp_per_hour": 100.01268625917545,
+      "duration_hours": 6.919122222222223
+    },
+    {
+      "file": "355690_44indicators_realtime_20250903_clean.csv",
+      "candidates": 25,
+      "fp_per_hour": 3.674938913327913,
+      "duration_hours": 6.802834166666667
+    },
+    {
+      "file": "362320_44indicators_realtime_20250901_clean.csv",
+      "candidates": 809,
+      "fp_per_hour": 162.50543609810185,
+      "duration_hours": 4.978295
+    },
+    {
+      "file": "413630_44indicators_realtime_20250911_clean.csv",
+      "candidates": 5431,
+      "fp_per_hour": 573.2361720362919,
+      "duration_hours": 9.47428
+    }
+  ],
+  "summary": {
+    "total_files": 12,
+    "total_candidates": 28807,
+    "total_hours": 78.36578888888889,
+    "avg_fp_per_hour": 367.5966312397374
+  }
+}

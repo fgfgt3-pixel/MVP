@@ -220,9 +220,66 @@ When optimizing detection parameters:
 
 ## Recent Work Completed (2025-09-30 to 2025-10-02)
 
-### CPD Gate Integration (Modify 1.md~5.md Implementation)
+### Phase 1+ Detection System Evolution (Modify 1-5)
 
-**Objective**: Integrate Change Point Detection (CPD) gate into the onset detection pipeline to improve signal quality and reduce false positives.
+**배경**: Phase 1 Strategy C+ (Recall 75%, FP/h 20.1 on 023790 file) → 12개 파일 대규모 검증 시 Recall 45% 급락
+
+#### 🔄 Modify 1-4: Detection Approach 진화
+1. **Data-driven Analysis**: Friction(spread)가 병목 (3.9% fulfillment) → 완화 필요
+2. **Gate+Score System**: Discriminative features(Cohen's d) 기반 → Recall 95%, FP/h 367.6
+3. **Noise 분석**: 81.9% noise, Score 단독으로는 Signal/Noise 구분 불가
+4. **Strict Confirm**: Delta+Persistent+Peak 검증 → Recall 35%, Noise 83.5%
+
+#### 🎯 Modify 5: Dual-Pathway Detection
+**핵심**: Sharp vs Gradual 급등은 다른 지표 사용
+- **Sharp**: ret_1s 중심 (가중치 60, threshold 85)
+- **Gradual**: ticks_per_sec 중심 (가중치 50, threshold 75)
+
+**결과**: Recall 90% (18/20) ✅, FP/h 208.7 ❌, **27,279개 중복 탐지** (온셋 개념 위반)
+
+#### 🔧 Modify 1 재작업: State Machine Refractory
+**문제**: 급등 구간에서 매 틱마다 온셋 발생 (급등당 1,000+ 탐지)
+
+**해결**: State Machine 생애주기 추적
+```
+IDLE → ONSET → PEAK → DECAY → IDLE
+```
+
+**결과**:
+- 탐지 수: 27,279 → 156개 (99.4% 감소) ✅
+- FP/h: 208.7 → 1.9 ✅
+- **Recall: 90% → 40% ❌** (Gradual threshold 85 상향 + 보수적 State Machine)
+
+#### 📁 생성된 주요 파일
+```
+onset_detection/src/detection/
+├── gate_score_detector.py          # Gate+Score 시스템
+├── strict_confirm_detector.py      # Strict 확인 로직
+└── state_machine_refractory.py     # State Machine Refractory
+
+onset_detection/scripts/
+├── implement_dual_pathway.py       # Dual-Pathway Detection
+├── calculate_dual_pathway_recall.py
+└── validate_state_machine.py
+
+onset_detection/data/events/
+├── dual_pathway_confirmed.jsonl    # 27,279개 (중복 多)
+└── state_machine_confirmed.jsonl   # 156개 (중복 제거, Recall 낮음)
+
+onset_detection/reports/
+├── dual_pathway_validation.json
+└── state_machine_validation.json
+```
+
+#### 🔍 핵심 발견
+1. **Dual-Pathway 필수**: Sharp/Gradual 급등은 다른 특성
+2. **Refractory 필수**: State Machine 없으면 중복 탐지 불가피
+3. **Trade-off**: Recall ↑ → Noise/중복 ↑, Noise ↓ → Recall ↓
+4. **다음 과제**: State Machine + Dual-Pathway 통합 + threshold 최적화
+
+### CPD Gate Integration (Phase 1 초기 작업)
+
+**Objective**: CPD gate를 파이프라인에 추가하여 신호 품질 개선
 
 #### ✅ Block 1: CandidateDetector CPD Integration
 - **File Modified**: `onset_detection/src/detection/candidate_detector.py`

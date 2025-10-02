@@ -1,0 +1,882 @@
+[
+  {
+    "file": "023790_44indicators_realtime_20250901_clean.csv",
+    "surge_name": "Surge1",
+    "strength": "중간",
+    "detected": true,
+    "total_ticks": 1764,
+    "stats": {
+      "ret_1s": {
+        "mean": 0.07930225052155672,
+        "median": 0.0,
+        "max": 2.475806726147923,
+        "p90": 0.5890666193609578,
+        "p95": 0.829177857658398
+      },
+      "z_vol_1s": {
+        "mean": 1.6075948501271708,
+        "median": 1.5099224328709202,
+        "max": 5.252286230413239,
+        "p90": 2.3538424017813426
+      },
+      "ticks_per_sec": {
+        "mean": 11.303854875283447,
+        "median": 9.0,
+        "max": 45.0
+      },
+      "spread": {
+        "mean": 3.360544217687075,
+        "median": 2.0,
+        "min": 1.0
+      },
+      "microprice_slope": {
+        "mean": 0.042481733152656916,
+        "median": 0.0,
+        "max": 10.77677086320614
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.4217687074829932,
+      "participation": 0.07993197278911565,
+      "friction": 0.5328798185941043
+    },
+    "three_axes_rate": 0.012471655328798186,
+    "two_axes_rate": 0.27040816326530615
+  },
+  {
+    "file": "023790_44indicators_realtime_20250901_clean.csv",
+    "surge_name": "Surge2",
+    "strength": "중간",
+    "detected": true,
+    "total_ticks": 3519,
+    "stats": {
+      "ret_1s": {
+        "mean": -0.004941547590984123,
+        "median": 0.0,
+        "max": 322.9974160206718,
+        "p90": 0.37258462611386955,
+        "p95": 0.5944243196424484
+      },
+      "z_vol_1s": {
+        "mean": 1.5117806180253683,
+        "median": 1.4961106253177878,
+        "max": 5.294651384711989,
+        "p90": 2.1892186162909524
+      },
+      "ticks_per_sec": {
+        "mean": 13.341574310883773,
+        "median": 11.0,
+        "max": 47.0
+      },
+      "spread": {
+        "mean": 2.8886047172492186,
+        "median": 2.0,
+        "min": 1.0
+      },
+      "microprice_slope": {
+        "mean": 0.008970087900232985,
+        "median": 0.0,
+        "max": 14.614849265566818
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.3452685421994885,
+      "participation": 0.04774083546462063,
+      "friction": 0.37112816140949134
+    },
+    "three_axes_rate": 0.008809320829781187,
+    "two_axes_rate": 0.12674055129298095
+  },
+  {
+    "file": "023790_44indicators_realtime_20250902_clean.csv",
+    "surge_name": "Surge1",
+    "strength": "강한",
+    "detected": true,
+    "total_ticks": 5522,
+    "stats": {
+      "ret_1s": {
+        "mean": 0.23830630182263388,
+        "median": 0.0,
+        "max": 431.8936877076412,
+        "p90": 0.5208295696562444,
+        "p95": 0.8042250064101296
+      },
+      "z_vol_1s": {
+        "mean": 1.5679568382549083,
+        "median": 1.5124029809301396,
+        "max": 5.294651389218151,
+        "p90": 2.1778992504908867
+      },
+      "ticks_per_sec": {
+        "mean": 19.491126403477,
+        "median": 17.0,
+        "max": 62.0
+      },
+      "spread": {
+        "mean": 4.197935530604854,
+        "median": 3.0,
+        "min": 1.0
+      },
+      "microprice_slope": {
+        "mean": 0.045768938538163245,
+        "median": 0.0,
+        "max": 97.95673796833968
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.41452372328866355,
+      "participation": 0.04798985874683086,
+      "friction": 0.49927562477363274
+    },
+    "three_axes_rate": 0.01032234697573343,
+    "two_axes_rate": 0.2113364722926476
+  },
+  {
+    "file": "054540_44indicators_realtime_20250901_clean.csv",
+    "surge_name": "Surge1",
+    "strength": "강한",
+    "detected": true,
+    "total_ticks": 20601,
+    "stats": {
+      "ret_1s": {
+        "mean": -0.0007028945208238477,
+        "median": 0.0,
+        "max": 0.7493715983882088,
+        "p90": 0.2078922120458984,
+        "p95": 0.2590206532708092
+      },
+      "z_vol_1s": {
+        "mean": 1.5457872100994605,
+        "median": 1.4706424035752257,
+        "max": 5.294651370413056,
+        "p90": 2.2197019279077286
+      },
+      "ticks_per_sec": {
+        "mean": 47.606378331148974,
+        "median": 42.0,
+        "max": 153.0
+      },
+      "spread": {
+        "mean": 12.462016406970536,
+        "median": 10.0,
+        "min": 10.0
+      },
+      "microprice_slope": {
+        "mean": 0.01491392251361082,
+        "median": 0.0,
+        "max": 47.32334940477813
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.3495461385369642,
+      "participation": 0.056938983544488134,
+      "friction": 0.0
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.021503810494636184
+  },
+  {
+    "file": "054540_44indicators_realtime_20250902_clean.csv",
+    "surge_name": "Surge1",
+    "strength": "약한",
+    "detected": true,
+    "total_ticks": 3104,
+    "stats": {
+      "ret_1s": {
+        "mean": -0.03294645940810517,
+        "median": 0.0,
+        "max": 0.8770545001666404,
+        "p90": 0.23349521556655267,
+        "p95": 0.4282610542844829
+      },
+      "z_vol_1s": {
+        "mean": 1.581703015798145,
+        "median": 1.490364830499525,
+        "max": 4.936420792472515,
+        "p90": 2.199873700186495
+      },
+      "ticks_per_sec": {
+        "mean": 36.368556701030926,
+        "median": 22.0,
+        "max": 149.0
+      },
+      "spread": {
+        "mean": 12.380798969072165,
+        "median": 10.0,
+        "min": 10.0
+      },
+      "microprice_slope": {
+        "mean": 0.008012256283047192,
+        "median": 0.0,
+        "max": 30.88283345518903
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.3015463917525773,
+      "participation": 0.052512886597938145,
+      "friction": 0.0
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.013530927835051547
+  },
+  {
+    "file": "054540_44indicators_realtime_20250902_clean.csv",
+    "surge_name": "Surge2",
+    "strength": "중간",
+    "detected": true,
+    "total_ticks": 13084,
+    "stats": {
+      "ret_1s": {
+        "mean": -0.0024387572433381957,
+        "median": 0.0,
+        "max": 40.56246619794484,
+        "p90": 0.22490352233868213,
+        "p95": 0.3199932548750373
+      },
+      "z_vol_1s": {
+        "mean": 1.5786626209978156,
+        "median": 1.4810008921943036,
+        "max": 5.153908992442135,
+        "p90": 2.250959210060767
+      },
+      "ticks_per_sec": {
+        "mean": 35.155304188321615,
+        "median": 20.0,
+        "max": 170.0
+      },
+      "spread": {
+        "mean": 13.907062060531947,
+        "median": 10.0,
+        "min": 10.0
+      },
+      "microprice_slope": {
+        "mean": 0.014870962325353477,
+        "median": 0.0,
+        "max": 63.11017922717838
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.3469886884744726,
+      "participation": 0.06007337205747478,
+      "friction": 0.0
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.02124732497707123
+  },
+  {
+    "file": "054540_44indicators_realtime_20250903_clean.csv",
+    "surge_name": "Surge1",
+    "strength": "약한",
+    "detected": false,
+    "total_ticks": 2504,
+    "stats": {
+      "ret_1s": {
+        "mean": -0.26364625477095766,
+        "median": 0.0,
+        "max": 54.054054054054056,
+        "p90": 0.2711997086148535,
+        "p95": 0.3875567224741461
+      },
+      "z_vol_1s": {
+        "mean": 1.585032445949679,
+        "median": 1.5032662124935483,
+        "max": 5.185429916707405,
+        "p90": 2.203903778942929
+      },
+      "ticks_per_sec": {
+        "mean": 20.773961661341854,
+        "median": 15.0,
+        "max": 74.0
+      },
+      "spread": {
+        "mean": 14.201277955271566,
+        "median": 10.0,
+        "min": 10.0
+      },
+      "microprice_slope": {
+        "mean": 0.023492470360607445,
+        "median": 0.0,
+        "max": 29.42612157403164
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.33746006389776356,
+      "participation": 0.048722044728434506,
+      "friction": 0.0
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.017172523961661343
+  },
+  {
+    "file": "362320_44indicators_realtime_20250901_clean.csv",
+    "surge_name": "Surge1",
+    "strength": "약한",
+    "detected": true,
+    "total_ticks": 1642,
+    "stats": {
+      "ret_1s": {
+        "mean": 0.2286240617317213,
+        "median": 0.0,
+        "max": 108.93246187363836,
+        "p90": 0.5992327373667957,
+        "p95": 0.7350246084980688
+      },
+      "z_vol_1s": {
+        "mean": 1.6017557080374871,
+        "median": 1.5376233829414248,
+        "max": 4.343191250951849,
+        "p90": 2.199189311050977
+      },
+      "ticks_per_sec": {
+        "mean": 28.859926918392205,
+        "median": 10.0,
+        "max": 138.0
+      },
+      "spread": {
+        "mean": 18.398294762484774,
+        "median": 10.0,
+        "min": 10.0
+      },
+      "microprice_slope": {
+        "mean": 0.13535948475798076,
+        "median": 0.0,
+        "max": 51.2256442488997
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.4299634591961023,
+      "participation": 0.0438489646772229,
+      "friction": 0.6035322777101096
+    },
+    "three_axes_rate": 0.010962241169305725,
+    "two_axes_rate": 0.21619975639464067
+  },
+  {
+    "file": "097230_44indicators_realtime_20250902_clean.csv",
+    "surge_name": "Surge1",
+    "strength": "강한",
+    "detected": false,
+    "total_ticks": 49059,
+    "stats": {
+      "ret_1s": {
+        "mean": -0.006961208146392632,
+        "median": 0.0,
+        "max": 1.97256815222966,
+        "p90": 0.2368904807929198,
+        "p95": 0.4314021973516083
+      },
+      "z_vol_1s": {
+        "mean": 1.545981657893618,
+        "median": 1.4633447586114352,
+        "max": 5.294651386446351,
+        "p90": 2.236565899029497
+      },
+      "ticks_per_sec": {
+        "mean": 127.40025275688457,
+        "median": 64.0,
+        "max": 797.0
+      },
+      "spread": {
+        "mean": 52.81701624574492,
+        "median": 50.0,
+        "min": 50.0
+      },
+      "microprice_slope": {
+        "mean": 0.04344711889832633,
+        "median": 0.0,
+        "max": 146.06568141858588
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.30530585621394646,
+      "participation": 0.060661652296214764,
+      "friction": 0.0
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.019507124075093255
+  },
+  {
+    "file": "097230_44indicators_realtime_20250903_clean.csv",
+    "surge_name": "Surge1",
+    "strength": "약한",
+    "detected": false,
+    "total_ticks": 13032,
+    "stats": {
+      "ret_1s": {
+        "mean": -0.011706785898193474,
+        "median": 0.0,
+        "max": 0.820820382611741,
+        "p90": 0.2452983663189019,
+        "p95": 0.2559873524575635
+      },
+      "z_vol_1s": {
+        "mean": 1.5715790278992028,
+        "median": 1.4786658525725696,
+        "max": 5.26558878747483,
+        "p90": 2.2116502918750274
+      },
+      "ticks_per_sec": {
+        "mean": 93.23833640270104,
+        "median": 47.0,
+        "max": 518.0
+      },
+      "spread": {
+        "mean": 51.235420503376304,
+        "median": 50.0,
+        "min": 50.0
+      },
+      "microprice_slope": {
+        "mean": 0.0483535619820208,
+        "median": 0.0,
+        "max": 49.9675659108143
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.2763965623081645,
+      "participation": 0.056553100061387356,
+      "friction": 0.0
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.014119091467157766
+  },
+  {
+    "file": "097230_44indicators_realtime_20250903_clean.csv",
+    "surge_name": "Surge2",
+    "strength": "약한",
+    "detected": false,
+    "total_ticks": 9451,
+    "stats": {
+      "ret_1s": {
+        "mean": 0.11006337844301317,
+        "median": 0.0,
+        "max": 2.264185119775393,
+        "p90": 0.4826254826254826,
+        "p95": 0.7508766492820773
+      },
+      "z_vol_1s": {
+        "mean": 1.5699963270070774,
+        "median": 1.4637536306767258,
+        "max": 5.28973507142359,
+        "p90": 2.2160392636616244
+      },
+      "ticks_per_sec": {
+        "mean": 161.05248121891864,
+        "median": 30.0,
+        "max": 768.0
+      },
+      "spread": {
+        "mean": 51.793461009416994,
+        "median": 50.0,
+        "min": 50.0
+      },
+      "microprice_slope": {
+        "mean": 0.06719902404331075,
+        "median": 0.0,
+        "max": 135.99362343269968
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.38419214897894405,
+      "participation": 0.0579832821923606,
+      "friction": 0.0
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.023277960004232358
+  },
+  {
+    "file": "355690_44indicators_realtime_20250903_clean.csv",
+    "surge_name": "Surge1",
+    "strength": "약한",
+    "detected": false,
+    "total_ticks": 125,
+    "stats": {
+      "ret_1s": {
+        "mean": 11.503893465302111,
+        "median": 0.0,
+        "max": 434.31053203040176,
+        "p90": 54.64480874316939,
+        "p95": 100.77884554990253
+      },
+      "z_vol_1s": {
+        "mean": 1.6608127830473436,
+        "median": 1.591973093100287,
+        "max": 4.367492965319216,
+        "p90": 2.576393633251237
+      },
+      "ticks_per_sec": {
+        "mean": 2.984,
+        "median": 1.0,
+        "max": 10.0
+      },
+      "spread": {
+        "mean": 25.68,
+        "median": 30.0,
+        "min": 10.0
+      },
+      "microprice_slope": {
+        "mean": 0.8798123213020299,
+        "median": 0.0,
+        "max": 45.334470407640765
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.264,
+      "participation": 0.112,
+      "friction": 0.272
+    },
+    "three_axes_rate": 0.016,
+    "two_axes_rate": 0.088
+  },
+  {
+    "file": "355690_44indicators_realtime_20250903_clean.csv",
+    "surge_name": "Surge2",
+    "strength": "중간",
+    "detected": false,
+    "total_ticks": 94,
+    "stats": {
+      "ret_1s": {
+        "mean": -4.185771987018762,
+        "median": 0.0,
+        "max": 1.1841606669192877,
+        "p90": 0.0,
+        "p95": 0.250355725657956
+      },
+      "z_vol_1s": {
+        "mean": 1.5335818996764814,
+        "median": 1.402947593452643,
+        "max": 3.194076298419649,
+        "p90": 2.0912114534364883
+      },
+      "ticks_per_sec": {
+        "mean": 2.0,
+        "median": 1.0,
+        "max": 5.0
+      },
+      "spread": {
+        "mean": 32.234042553191486,
+        "median": 30.0,
+        "min": 10.0
+      },
+      "microprice_slope": {
+        "mean": 0.3976522377109351,
+        "median": 0.0,
+        "max": 29.895165987187283
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.07446808510638298,
+      "participation": 0.02127659574468085,
+      "friction": 0.1595744680851064
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.031914893617021274
+  },
+  {
+    "file": "049470_44indicators_realtime_20250903_clean.csv",
+    "surge_name": "Surge1",
+    "strength": "약한",
+    "detected": false,
+    "total_ticks": 680,
+    "stats": {
+      "ret_1s": {
+        "mean": 2.738542658996072,
+        "median": 0.0,
+        "max": 162.60162601626016,
+        "p90": 0.5403321178721033,
+        "p95": 0.8440873712398664
+      },
+      "z_vol_1s": {
+        "mean": 1.5682926773729793,
+        "median": 1.4400675494871176,
+        "max": 4.80101381105703,
+        "p90": 2.34823326766581
+      },
+      "ticks_per_sec": {
+        "mean": 4.370588235294117,
+        "median": 2.0,
+        "max": 21.0
+      },
+      "spread": {
+        "mean": 6.3161764705882355,
+        "median": 5.0,
+        "min": 5.0
+      },
+      "microprice_slope": {
+        "mean": 0.046357151691294056,
+        "median": 0.0,
+        "max": 12.03767375814823
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.22647058823529412,
+      "participation": 0.07205882352941176,
+      "friction": 0.0
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.01911764705882353
+  },
+  {
+    "file": "208640_44indicators_realtime_20250903_clean.csv",
+    "surge_name": "Surge1",
+    "strength": "중간",
+    "detected": false,
+    "total_ticks": 1022,
+    "stats": {
+      "ret_1s": {
+        "mean": 0.3477904457125575,
+        "median": 0.0,
+        "max": 178.89087656529517,
+        "p90": 1.0472993139131812,
+        "p95": 3.739249657235448
+      },
+      "z_vol_1s": {
+        "mean": 1.590449268984273,
+        "median": 1.5238243720197078,
+        "max": 4.174402019949376,
+        "p90": 2.1720920085949853
+      },
+      "ticks_per_sec": {
+        "mean": 19.31311154598826,
+        "median": 11.0,
+        "max": 69.0
+      },
+      "spread": {
+        "mean": 1.6418786692759295,
+        "median": 1.0,
+        "min": 1.0
+      },
+      "microprice_slope": {
+        "mean": 0.006502264172868593,
+        "median": 0.0,
+        "max": 9.617811832184202
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.3816046966731898,
+      "participation": 0.03522504892367906,
+      "friction": 0.0
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.02054794520547945
+  },
+  {
+    "file": "413630_44indicators_realtime_20250911_clean.csv",
+    "surge_name": "Surge1",
+    "strength": "중간",
+    "detected": true,
+    "total_ticks": 8731,
+    "stats": {
+      "ret_1s": {
+        "mean": 0.07237144184149757,
+        "median": 0.0,
+        "max": 184.8428835489833,
+        "p90": 0.4314491947000781,
+        "p95": 0.6493000545412047
+      },
+      "z_vol_1s": {
+        "mean": 1.5951089740197528,
+        "median": 1.5084426734719931,
+        "max": 4.8635279367174,
+        "p90": 2.2017224080851907
+      },
+      "ticks_per_sec": {
+        "mean": 48.237429847669226,
+        "median": 32.0,
+        "max": 258.0
+      },
+      "spread": {
+        "mean": 6.7048448058641625,
+        "median": 5.0,
+        "min": 5.0
+      },
+      "microprice_slope": {
+        "mean": 0.012600623199610732,
+        "median": 0.0,
+        "max": 23.36586296641144
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.3938838621005612,
+      "participation": 0.0501660749055091,
+      "friction": 0.0
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.02256328026571985
+  },
+  {
+    "file": "413630_44indicators_realtime_20250911_clean.csv",
+    "surge_name": "Surge2",
+    "strength": "강한",
+    "detected": true,
+    "total_ticks": 26215,
+    "stats": {
+      "ret_1s": {
+        "mean": 0.03967423194961455,
+        "median": 0.0,
+        "max": 1.4158576051779936,
+        "p90": 0.3613317243159424,
+        "p95": 0.5150369324479999
+      },
+      "z_vol_1s": {
+        "mean": 1.4998522776836747,
+        "median": 1.451865499349071,
+        "max": 5.294651391778643,
+        "p90": 2.2074990209879393
+      },
+      "ticks_per_sec": {
+        "mean": 65.18561892046539,
+        "median": 58.0,
+        "max": 270.0
+      },
+      "spread": {
+        "mean": 6.250238413122259,
+        "median": 5.0,
+        "min": 0.0
+      },
+      "microprice_slope": {
+        "mean": 0.019278082140907045,
+        "median": 0.0,
+        "max": 3450.001227826891
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.4025557886706084,
+      "participation": 0.05531184436391379,
+      "friction": 0.019645241274079725
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.025290864009155065
+  },
+  {
+    "file": "413630_44indicators_realtime_20250911_clean.csv",
+    "surge_name": "Surge3",
+    "strength": "약한",
+    "detected": false,
+    "total_ticks": 3046,
+    "stats": {
+      "ret_1s": {
+        "mean": 0.04881076450380117,
+        "median": 0.0,
+        "max": 1.6242731377708477,
+        "p90": 0.3309968740000945,
+        "p95": 0.5051347044800504
+      },
+      "z_vol_1s": {
+        "mean": 1.577805941537073,
+        "median": 1.464825532372823,
+        "max": 5.181416524853273,
+        "p90": 2.2926592868937132
+      },
+      "ticks_per_sec": {
+        "mean": 33.58699934340118,
+        "median": 14.0,
+        "max": 213.0
+      },
+      "spread": {
+        "mean": 5.8141825344714375,
+        "median": 5.0,
+        "min": 5.0
+      },
+      "microprice_slope": {
+        "mean": 0.017132238914622025,
+        "median": 0.0,
+        "max": 17.461521805269967
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.34766907419566645,
+      "participation": 0.06927117531188444,
+      "friction": 0.0
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.02659225213394616
+  },
+  {
+    "file": "413630_44indicators_realtime_20250911_clean.csv",
+    "surge_name": "Surge4",
+    "strength": "중간",
+    "detected": false,
+    "total_ticks": 6583,
+    "stats": {
+      "ret_1s": {
+        "mean": 0.020810682577820684,
+        "median": 0.0,
+        "max": 157.9778830963665,
+        "p90": 0.1833395668786072,
+        "p95": 0.31398953968422544
+      },
+      "z_vol_1s": {
+        "mean": 1.569593908600735,
+        "median": 1.4682234112571606,
+        "max": 5.174854465913445,
+        "p90": 2.265742230438608
+      },
+      "ticks_per_sec": {
+        "mean": 18.523317636336017,
+        "median": 15.0,
+        "max": 93.0
+      },
+      "spread": {
+        "mean": 5.723834118183199,
+        "median": 5.0,
+        "min": 5.0
+      },
+      "microprice_slope": {
+        "mean": 0.018612204726978804,
+        "median": 0.0,
+        "max": 44.22662830729405
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.31581345890931184,
+      "participation": 0.06592738872854322,
+      "friction": 0.0
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.022330244569345282
+  },
+  {
+    "file": "413630_44indicators_realtime_20250911_clean.csv",
+    "surge_name": "Surge5",
+    "strength": "약한",
+    "detected": false,
+    "total_ticks": 2572,
+    "stats": {
+      "ret_1s": {
+        "mean": 0.026471673671527043,
+        "median": 0.0,
+        "max": 0.7930214115781126,
+        "p90": 0.3080039270278836,
+        "p95": 0.3573931208530721
+      },
+      "z_vol_1s": {
+        "mean": 1.5924424730751952,
+        "median": 1.5203493981721041,
+        "max": 4.898452186865833,
+        "p90": 2.183755516861205
+      },
+      "ticks_per_sec": {
+        "mean": 26.877916018662518,
+        "median": 17.0,
+        "max": 107.0
+      },
+      "spread": {
+        "mean": 5.699844479004666,
+        "median": 5.0,
+        "min": 5.0
+      },
+      "microprice_slope": {
+        "mean": 0.02509934206666921,
+        "median": 0.0,
+        "max": 11.350981945307922
+      }
+    },
+    "axes_pass_rate": {
+      "speed": 0.34914463452566097,
+      "participation": 0.04937791601866252,
+      "friction": 0.0
+    },
+    "three_axes_rate": 0.0,
+    "two_axes_rate": 0.01866251944012442
+  }
+]

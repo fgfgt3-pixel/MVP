@@ -1,0 +1,33 @@
+{
+  "total_detections": 156,
+  "total_surges": 20,
+  "avg_per_surge": 7.8,
+  "recall": {
+    "total": 0.4,
+    "detected_count": 8,
+    "total_surges": 20,
+    "by_strength": {
+      "강한": {
+        "detected": 2,
+        "total": 4
+      },
+      "중간": {
+        "detected": 4,
+        "total": 7
+      },
+      "약한": {
+        "detected": 2,
+        "total": 9
+      }
+    }
+  },
+  "noise": {
+    "total_detections": 156,
+    "true_positive": 10,
+    "false_positive": 146,
+    "noise_ratio": 0.9358974358974359
+  },
+  "fp_per_hour": {
+    "average": 1.8992835251744762
+  }
+}

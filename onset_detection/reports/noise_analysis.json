@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "total_detections": 28807,
+    "true_positive": 5227,
+    "false_positive": 23580,
+    "noise_rate": 81.85510466206131
+  },
+  "by_file": [
+    {
+      "file": "023790_44indicators_realtime_20250901_clean.csv",
+      "total_events": 9655,
+      "true_positive": 934,
+      "false_positive": 8721,
+      "noise_rate": 90.3262558259969,
+      "num_labels": 2
+    },
+    {
+      "file": "023790_44indicators_realtime_20250902_clean.csv",
+      "total_events": 4854,
+      "true_positive": 894,
+      "false_positive": 3960,
+      "noise_rate": 81.58220024721878,
+      "num_labels": 1
+    },
+    {
+      "file": "049470_44indicators_realtime_20250903_clean.csv",
+      "total_events": 141,
+      "true_positive": 19,
+      "false_positive": 122,
+      "noise_rate": 86.52482269503547,
+      "num_labels": 1
+    },
+    {
+      "file": "054540_44indicators_realtime_20250901_clean.csv",
+      "total_events": 3867,
+      "true_positive": 525,
+      "false_positive": 3342,
+      "noise_rate": 86.42358417377812,
+      "num_labels": 1
+    },
+    {
+      "file": "054540_44indicators_realtime_20250902_clean.csv",
+      "total_events": 1057,
+      "true_positive": 508,
+      "false_positive": 549,
+      "noise_rate": 51.93945127719962,
+      "num_labels": 2
+    },
+    {
+      "file": "054540_44indicators_realtime_20250903_clean.csv",
+      "total_events": 697,
+      "true_positive": 89,
+      "false_positive": 608,
+      "noise_rate": 87.2309899569584,
+      "num_labels": 1
+    },
+    {
+      "file": "097230_44indicators_realtime_20250902_clean.csv",
+      "total_events": 810,
+      "true_positive": 258,
+      "false_positive": 552,
+      "noise_rate": 68.14814814814815,
+      "num_labels": 1
+    },
+    {
+      "file": "097230_44indicators_realtime_20250903_clean.csv",
+      "total_events": 769,
+      "true_positive": 84,
+      "false_positive": 685,
+      "noise_rate": 89.07672301690506,
+      "num_labels": 2
+    },
+    {
+      "file": "208640_44indicators_realtime_20250903_clean.csv",
+      "total_events": 692,
+      "true_positive": 236,
+      "false_positive": 456,
+      "noise_rate": 65.89595375722543,
+      "num_labels": 1
+    },
+    {
+      "file": "355690_44indicators_realtime_20250903_clean.csv",
+      "total_events": 25,
+      "true_positive": 1,
+      "false_positive": 24,
+      "noise_rate": 96.0,
+      "num_labels": 2
+    },
+    {
+      "file": "362320_44indicators_realtime_20250901_clean.csv",
+      "total_events": 809,
+      "true_positive": 64,
+      "false_positive": 745,
+      "noise_rate": 92.08899876390606,
+      "num_labels": 1
+    },
+    {
+      "file": "413630_44indicators_realtime_20250911_clean.csv",
+      "total_events": 5431,
+      "true_positive": 1615,
+      "false_positive": 3816,
+      "noise_rate": 70.26330325906831,
+      "num_labels": 5
+    }
+  ],
+  "recommendations": {
+    "current_threshold": 70,
+    "recommended_threshold": 85,
+    "noise_severity": "high"
+  }
+}

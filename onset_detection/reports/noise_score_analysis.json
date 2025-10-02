@@ -1,0 +1,429 @@
+{
+  "signal_scores": {
+    "count": 5227,
+    "mean": 81.7608570881959,
+    "median": 77.5,
+    "p25": 72.5
+  },
+  "noise_scores": {
+    "count": 56810,
+    "mean": 82.39013377926422,
+    "median": 83.5,
+    "p75": 85.0,
+    "p90": 100.0
+  },
+  "threshold_simulation": [
+    {
+      "threshold": 70,
+      "signal_pass": 5227,
+      "noise_pass": 56810,
+      "total_pass": 62037,
+      "signal_recall": 1.0,
+      "noise_ratio": 0.9157438302948241
+    },
+    {
+      "threshold": 71,
+      "signal_pass": 4032,
+      "noise_pass": 45636,
+      "total_pass": 49668,
+      "signal_recall": 0.771379376315286,
+      "noise_ratio": 0.918820971249094
+    },
+    {
+      "threshold": 72,
+      "signal_pass": 4032,
+      "noise_pass": 45631,
+      "total_pass": 49663,
+      "signal_recall": 0.771379376315286,
+      "noise_ratio": 0.9188127982602743
+    },
+    {
+      "threshold": 73,
+      "signal_pass": 3862,
+      "noise_pass": 43968,
+      "total_pass": 47830,
+      "signal_recall": 0.7388559403099292,
+      "noise_ratio": 0.9192556972611332
+    },
+    {
+      "threshold": 74,
+      "signal_pass": 3846,
+      "noise_pass": 43089,
+      "total_pass": 46935,
+      "signal_recall": 0.7357949110388368,
+      "noise_ratio": 0.9180568871844039
+    },
+    {
+      "threshold": 75,
+      "signal_pass": 3846,
+      "noise_pass": 43089,
+      "total_pass": 46935,
+      "signal_recall": 0.7357949110388368,
+      "noise_ratio": 0.9180568871844039
+    },
+    {
+      "threshold": 76,
+      "signal_pass": 2786,
+      "noise_pass": 33169,
+      "total_pass": 35955,
+      "signal_recall": 0.533001721828965,
+      "noise_ratio": 0.9225142539285217
+    },
+    {
+      "threshold": 77,
+      "signal_pass": 2774,
+      "noise_pass": 32915,
+      "total_pass": 35689,
+      "signal_recall": 0.5307059498756457,
+      "noise_ratio": 0.9222729692622377
+    },
+    {
+      "threshold": 78,
+      "signal_pass": 2604,
+      "noise_pass": 31279,
+      "total_pass": 33883,
+      "signal_recall": 0.4981825138702889,
+      "noise_ratio": 0.9231473010064044
+    },
+    {
+      "threshold": 79,
+      "signal_pass": 2594,
+      "noise_pass": 31242,
+      "total_pass": 33836,
+      "signal_recall": 0.49626937057585613,
+      "noise_ratio": 0.9233360917366119
+    },
+    {
+      "threshold": 80,
+      "signal_pass": 2594,
+      "noise_pass": 31242,
+      "total_pass": 33836,
+      "signal_recall": 0.49626937057585613,
+      "noise_ratio": 0.9233360917366119
+    },
+    {
+      "threshold": 81,
+      "signal_pass": 2364,
+      "noise_pass": 30648,
+      "total_pass": 33012,
+      "signal_recall": 0.4522670748039028,
+      "noise_ratio": 0.9283896764812796
+    },
+    {
+      "threshold": 82,
+      "signal_pass": 2364,
+      "noise_pass": 30648,
+      "total_pass": 33012,
+      "signal_recall": 0.4522670748039028,
+      "noise_ratio": 0.9283896764812796
+    },
+    {
+      "threshold": 83,
+      "signal_pass": 2216,
+      "noise_pass": 28684,
+      "total_pass": 30900,
+      "signal_recall": 0.42395255404629806,
+      "noise_ratio": 0.928284789644013
+    },
+    {
+      "threshold": 84,
+      "signal_pass": 2132,
+      "noise_pass": 28401,
+      "total_pass": 30533,
+      "signal_recall": 0.40788215037306297,
+      "noise_ratio": 0.9301739101955262
+    },
+    {
+      "threshold": 85,
+      "signal_pass": 2132,
+      "noise_pass": 28401,
+      "total_pass": 30533,
+      "signal_recall": 0.40788215037306297,
+      "noise_ratio": 0.9301739101955262
+    },
+    {
+      "threshold": 86,
+      "signal_pass": 1235,
+      "noise_pass": 12450,
+      "total_pass": 13685,
+      "signal_recall": 0.236273196862445,
+      "noise_ratio": 0.9097552064303982
+    },
+    {
+      "threshold": 87,
+      "signal_pass": 1230,
+      "noise_pass": 12239,
+      "total_pass": 13469,
+      "signal_recall": 0.23531662521522861,
+      "noise_ratio": 0.9086791892493875
+    },
+    {
+      "threshold": 88,
+      "signal_pass": 1178,
+      "noise_pass": 11672,
+      "total_pass": 12850,
+      "signal_recall": 0.2253682800841783,
+      "noise_ratio": 0.9083268482490272
+    },
+    {
+      "threshold": 89,
+      "signal_pass": 1173,
+      "noise_pass": 11408,
+      "total_pass": 12581,
+      "signal_recall": 0.22441170843696193,
+      "noise_ratio": 0.906764168190128
+    },
+    {
+      "threshold": 90,
+      "signal_pass": 1173,
+      "noise_pass": 11408,
+      "total_pass": 12581,
+      "signal_recall": 0.22441170843696193,
+      "noise_ratio": 0.906764168190128
+    },
+    {
+      "threshold": 91,
+      "signal_pass": 997,
+      "noise_pass": 10203,
+      "total_pass": 11200,
+      "signal_recall": 0.19074038645494548,
+      "noise_ratio": 0.9109821428571429
+    },
+    {
+      "threshold": 92,
+      "signal_pass": 997,
+      "noise_pass": 10195,
+      "total_pass": 11192,
+      "signal_recall": 0.19074038645494548,
+      "noise_ratio": 0.9109185132237312
+    },
+    {
+      "threshold": 93,
+      "signal_pass": 889,
+      "noise_pass": 8315,
+      "total_pass": 9204,
+      "signal_recall": 0.17007843887507174,
+      "noise_ratio": 0.9034115601912213
+    },
+    {
+      "threshold": 94,
+      "signal_pass": 782,
+      "noise_pass": 7758,
+      "total_pass": 8540,
+      "signal_recall": 0.1496078056246413,
+      "noise_ratio": 0.9084309133489461
+    },
+    {
+      "threshold": 95,
+      "signal_pass": 782,
+      "noise_pass": 7758,
+      "total_pass": 8540,
+      "signal_recall": 0.1496078056246413,
+      "noise_ratio": 0.9084309133489461
+    },
+    {
+      "threshold": 96,
+      "signal_pass": 657,
+      "noise_pass": 7177,
+      "total_pass": 7834,
+      "signal_recall": 0.12569351444423188,
+      "noise_ratio": 0.9161347970385499
+    },
+    {
+      "threshold": 97,
+      "signal_pass": 657,
+      "noise_pass": 7177,
+      "total_pass": 7834,
+      "signal_recall": 0.12569351444423188,
+      "noise_ratio": 0.9161347970385499
+    },
+    {
+      "threshold": 98,
+      "signal_pass": 607,
+      "noise_pass": 6357,
+      "total_pass": 6964,
+      "signal_recall": 0.11612779797206811,
+      "noise_ratio": 0.9128374497415278
+    },
+    {
+      "threshold": 99,
+      "signal_pass": 601,
+      "noise_pass": 6199,
+      "total_pass": 6800,
+      "signal_recall": 0.11497991199540845,
+      "noise_ratio": 0.9116176470588235
+    },
+    {
+      "threshold": 100,
+      "signal_pass": 601,
+      "noise_pass": 6199,
+      "total_pass": 6800,
+      "signal_recall": 0.11497991199540845,
+      "noise_ratio": 0.9116176470588235
+    },
+    {
+      "threshold": 101,
+      "signal_pass": 339,
+      "noise_pass": 3330,
+      "total_pass": 3669,
+      "signal_recall": 0.06485555768127033,
+      "noise_ratio": 0.9076042518397384
+    },
+    {
+      "threshold": 102,
+      "signal_pass": 339,
+      "noise_pass": 3324,
+      "total_pass": 3663,
+      "signal_recall": 0.06485555768127033,
+      "noise_ratio": 0.9074529074529074
+    },
+    {
+      "threshold": 103,
+      "signal_pass": 314,
+      "noise_pass": 3194,
+      "total_pass": 3508,
+      "signal_recall": 0.06007269944518844,
+      "noise_ratio": 0.9104903078677309
+    },
+    {
+      "threshold": 104,
+      "signal_pass": 314,
+      "noise_pass": 3189,
+      "total_pass": 3503,
+      "signal_recall": 0.06007269944518844,
+      "noise_ratio": 0.9103625463888096
+    },
+    {
+      "threshold": 105,
+      "signal_pass": 314,
+      "noise_pass": 3189,
+      "total_pass": 3503,
+      "signal_recall": 0.06007269944518844,
+      "noise_ratio": 0.9103625463888096
+    },
+    {
+      "threshold": 106,
+      "signal_pass": 294,
+      "noise_pass": 3114,
+      "total_pass": 3408,
+      "signal_recall": 0.05624641285632294,
+      "noise_ratio": 0.9137323943661971
+    },
+    {
+      "threshold": 107,
+      "signal_pass": 294,
+      "noise_pass": 3114,
+      "total_pass": 3408,
+      "signal_recall": 0.05624641285632294,
+      "noise_ratio": 0.9137323943661971
+    },
+    {
+      "threshold": 108,
+      "signal_pass": 262,
+      "noise_pass": 2746,
+      "total_pass": 3008,
+      "signal_recall": 0.05012435431413813,
+      "noise_ratio": 0.9128989361702128
+    },
+    {
+      "threshold": 109,
+      "signal_pass": 256,
+      "noise_pass": 2742,
+      "total_pass": 2998,
+      "signal_recall": 0.04897646833747848,
+      "noise_ratio": 0.914609739826551
+    },
+    {
+      "threshold": 110,
+      "signal_pass": 256,
+      "noise_pass": 2742,
+      "total_pass": 2998,
+      "signal_recall": 0.04897646833747848,
+      "noise_ratio": 0.914609739826551
+    },
+    {
+      "threshold": 111,
+      "signal_pass": 59,
+      "noise_pass": 752,
+      "total_pass": 811,
+      "signal_recall": 0.011287545437153242,
+      "noise_ratio": 0.9272503082614056
+    },
+    {
+      "threshold": 112,
+      "signal_pass": 59,
+      "noise_pass": 752,
+      "total_pass": 811,
+      "signal_recall": 0.011287545437153242,
+      "noise_ratio": 0.9272503082614056
+    },
+    {
+      "threshold": 113,
+      "signal_pass": 53,
+      "noise_pass": 588,
+      "total_pass": 641,
+      "signal_recall": 0.010139659460493592,
+      "noise_ratio": 0.9173166926677067
+    },
+    {
+      "threshold": 114,
+      "signal_pass": 53,
+      "noise_pass": 583,
+      "total_pass": 636,
+      "signal_recall": 0.010139659460493592,
+      "noise_ratio": 0.9166666666666666
+    },
+    {
+      "threshold": 115,
+      "signal_pass": 53,
+      "noise_pass": 583,
+      "total_pass": 636,
+      "signal_recall": 0.010139659460493592,
+      "noise_ratio": 0.9166666666666666
+    },
+    {
+      "threshold": 116,
+      "signal_pass": 37,
+      "noise_pass": 508,
+      "total_pass": 545,
+      "signal_recall": 0.007078630189401186,
+      "noise_ratio": 0.9321100917431193
+    },
+    {
+      "threshold": 117,
+      "signal_pass": 37,
+      "noise_pass": 508,
+      "total_pass": 545,
+      "signal_recall": 0.007078630189401186,
+      "noise_ratio": 0.9321100917431193
+    },
+    {
+      "threshold": 118,
+      "signal_pass": 15,
+      "noise_pass": 200,
+      "total_pass": 215,
+      "signal_recall": 0.0028697149416491295,
+      "noise_ratio": 0.9302325581395349
+    },
+    {
+      "threshold": 119,
+      "signal_pass": 14,
+      "noise_pass": 200,
+      "total_pass": 214,
+      "signal_recall": 0.002678400612205854,
+      "noise_ratio": 0.9345794392523364
+    },
+    {
+      "threshold": 120,
+      "signal_pass": 14,
+      "noise_pass": 200,
+      "total_pass": 214,
+      "signal_recall": 0.002678400612205854,
+      "noise_ratio": 0.9345794392523364
+    }
+  ],
+  "recommendation": {
+    "best_threshold": null,
+    "target": "Noise < 40%"
+  }
+}

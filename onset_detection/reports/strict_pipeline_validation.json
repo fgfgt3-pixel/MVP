@@ -1,0 +1,172 @@
+{
+  "recall": {
+    "total": 0.35,
+    "detected_count": 7,
+    "total_surges": 20,
+    "by_strength": {
+      "강한": {
+        "detected": 2,
+        "total": 4
+      },
+      "중간": {
+        "detected": 2,
+        "total": 7
+      },
+      "약한": {
+        "detected": 3,
+        "total": 9
+      }
+    }
+  },
+  "noise": {
+    "total_detections": 249,
+    "true_positive": 41,
+    "false_positive": 208,
+    "noise_ratio": 0.8353413654618473
+  },
+  "fp_per_hour": {
+    "average": 2.799732687375281
+  },
+  "detection_results": [
+    {
+      "file": "023790_44indicators_realtime_20250901_clean.csv",
+      "surge_name": "Surge1",
+      "strength": "중간",
+      "detected": true,
+      "detection_count": 8
+    },
+    {
+      "file": "023790_44indicators_realtime_20250901_clean.csv",
+      "surge_name": "Surge2",
+      "strength": "중간",
+      "detected": true,
+      "detection_count": 2
+    },
+    {
+      "file": "023790_44indicators_realtime_20250902_clean.csv",
+      "surge_name": "Surge1",
+      "strength": "강한",
+      "detected": true,
+      "detection_count": 11
+    },
+    {
+      "file": "054540_44indicators_realtime_20250902_clean.csv",
+      "surge_name": "Surge1",
+      "strength": "약한",
+      "detected": true,
+      "detection_count": 4
+    },
+    {
+      "file": "054540_44indicators_realtime_20250903_clean.csv",
+      "surge_name": "Surge1",
+      "strength": "약한",
+      "detected": true,
+      "detection_count": 1
+    },
+    {
+      "file": "413630_44indicators_realtime_20250911_clean.csv",
+      "surge_name": "Surge2",
+      "strength": "강한",
+      "detected": true,
+      "detection_count": 5
+    },
+    {
+      "file": "413630_44indicators_realtime_20250911_clean.csv",
+      "surge_name": "Surge5",
+      "strength": "약한",
+      "detected": true,
+      "detection_count": 10
+    },
+    {
+      "file": "054540_44indicators_realtime_20250901_clean.csv",
+      "surge_name": "Surge1",
+      "strength": "강한",
+      "detected": false,
+      "detection_count": 0
+    },
+    {
+      "file": "054540_44indicators_realtime_20250902_clean.csv",
+      "surge_name": "Surge2",
+      "strength": "중간",
+      "detected": false,
+      "detection_count": 0
+    },
+    {
+      "file": "362320_44indicators_realtime_20250901_clean.csv",
+      "surge_name": "Surge1",
+      "strength": "약한",
+      "detected": false,
+      "detection_count": 0
+    },
+    {
+      "file": "097230_44indicators_realtime_20250902_clean.csv",
+      "surge_name": "Surge1",
+      "strength": "강한",
+      "detected": false,
+      "detection_count": 0
+    },
+    {
+      "file": "097230_44indicators_realtime_20250903_clean.csv",
+      "surge_name": "Surge1",
+      "strength": "약한",
+      "detected": false,
+      "detection_count": 0
+    },
+    {
+      "file": "097230_44indicators_realtime_20250903_clean.csv",
+      "surge_name": "Surge2",
+      "strength": "약한",
+      "detected": false,
+      "detection_count": 0
+    },
+    {
+      "file": "355690_44indicators_realtime_20250903_clean.csv",
+      "surge_name": "Surge1",
+      "strength": "약한",
+      "detected": false,
+      "detection_count": 0
+    },
+    {
+      "file": "355690_44indicators_realtime_20250903_clean.csv",
+      "surge_name": "Surge2",
+      "strength": "중간",
+      "detected": false,
+      "detection_count": 0
+    },
+    {
+      "file": "049470_44indicators_realtime_20250903_clean.csv",
+      "surge_name": "Surge1",
+      "strength": "약한",
+      "detected": false,
+      "detection_count": 0
+    },
+    {
+      "file": "208640_44indicators_realtime_20250903_clean.csv",
+      "surge_name": "Surge1",
+      "strength": "중간",
+      "detected": false,
+      "detection_count": 0
+    },
+    {
+      "file": "413630_44indicators_realtime_20250911_clean.csv",
+      "surge_name": "Surge1",
+      "strength": "중간",
+      "detected": false,
+      "detection_count": 0
+    },
+    {
+      "file": "413630_44indicators_realtime_20250911_clean.csv",
+      "surge_name": "Surge3",
+      "strength": "약한",
+      "detected": false,
+      "detection_count": 0
+    },
+    {
+      "file": "413630_44indicators_realtime_20250911_clean.csv",
+      "surge_name": "Surge4",
+      "strength": "중간",
+      "detected": false,
+      "detection_count": 0
+    }
+  ]
+}

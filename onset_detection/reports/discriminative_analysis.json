@@ -1,0 +1,73 @@
+{
+  "indicators": {
+    "ret_1s": {
+      "mean_detected": 0.3934206023850023,
+      "mean_missed": 5.299163143746674,
+      "difference": -4.905742541361672,
+      "cohens_d": 0.44452264471692454,
+      "p_value": 0.3828120165221792,
+      "discriminative_score": 55.56533058961557
+    },
+    "z_vol_1s": {
+      "mean_detected": 2.2222117607602536,
+      "mean_missed": 2.2543860573319203,
+      "difference": -0.032174296571666705,
+      "cohens_d": 0.34935282724648004,
+      "p_value": 0.48508630849974854,
+      "discriminative_score": 43.669103405810006
+    },
+    "ticks_per_sec": {
+      "mean_detected": 33.94997449963029,
+      "mean_missed": 46.37463316541165,
+      "difference": -12.424658665781365,
+      "cohens_d": 0.319127246905075,
+      "p_value": 0.5253234126118654,
+      "discriminative_score": 39.89090586313437
+    },
+    "microprice_slope": {
+      "mean_detected": 0.033584010090173685,
+      "mean_missed": 0.14305999416996937,
+      "difference": -0.10947598407979568,
+      "cohens_d": 0.5985601424715168,
+      "p_value": 0.24306088329914582,
+      "discriminative_score": 74.8200178089396
+    },
+    "spread": {
+      "mean_detected": 8.950037764843,
+      "mean_missed": 23.014284958047703,
+      "difference": -14.064247193204704,
+      "cohens_d": 0.9718707456418805,
+      "p_value": 0.06475373868256172,
+      "discriminative_score": 100.0
+    }
+  },
+  "ranking": [
+    {
+      "indicator": "spread",
+      "score": 100.0
+    },
+    {
+      "indicator": "microprice_slope",
+      "score": 74.8200178089396
+    },
+    {
+      "indicator": "ret_1s",
+      "score": 55.56533058961557
+    },
+    {
+      "indicator": "z_vol_1s",
+      "score": 43.669103405810006
+    },
+    {
+      "indicator": "ticks_per_sec",
+      "score": 39.89090586313437
+    }
+  ],
+  "recommended_weights": {
+    "spread": 50,
+    "microprice_slope": 40,
+    "ret_1s": 20,
+    "z_vol_1s": 15,
+    "ticks_per_sec": 10
+  }
+}
