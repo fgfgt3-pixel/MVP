@@ -80,12 +80,16 @@ class CoreIndicators:
     
     def _add_price_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
         """Add price-based indicators."""
-        # Calculate log returns (1s interval approximation using sequential returns)
+        # Always recalculate ret_1s from price (ignore if exists)
+        # This ensures data quality regardless of upstream calculations
         df['ret_1s'] = np.log(df['price'] / df['price'].shift(1))
-        
+
+        # Clip extreme values (±10% per tick is unrealistic)
+        df['ret_1s'] = df['ret_1s'].clip(-0.1, 0.1)
+
         # Calculate acceleration (change in returns)
         df['accel_1s'] = df['ret_1s'].diff(1)
-        
+
         return df
     
     def _add_volume_indicators(self, df: pd.DataFrame) -> pd.DataFrame:

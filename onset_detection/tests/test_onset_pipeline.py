@@ -5,12 +5,12 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
-from onset_detection.src.detection.onset_pipeline import OnsetPipelineDF, run_onset_pipeline
-from onset_detection.src.detection.candidate_detector import CandidateDetector
-from onset_detection.src.detection.confirm_detector import ConfirmDetector
-from onset_detection.src.detection.refractory_manager import RefractoryManager
-from onset_detection.src.config_loader import load_config
-from onset_detection.src.features import calculate_core_indicators
+from src.detection.onset_pipeline import OnsetPipelineDF, run_onset_pipeline
+from src.detection.candidate_detector import CandidateDetector
+from src.detection.confirm_detector import ConfirmDetector
+from src.detection.refractory_manager import RefractoryManager
+from src.config_loader import load_config
+from src.features import calculate_core_indicators
 
 
 class TestOnsetPipelineDF:

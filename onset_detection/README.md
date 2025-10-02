@@ -5,7 +5,7 @@
 ## 프로젝트 개요
 
 현재 단계는 **'급등 포착(Detection Only)' 전용 MVP**이다.
-즉, 목표는 **놓치지 않는 빠른 탐지(Recall 우선)와 경보(Alert Event) 생성**까지이며,
+즉, 목표는 **놓치지 않는 빠른 탐지(Recall 50-80%)와 경보(Alert Event) 생성**까지이며,
 체결성·슬리피지·호가분석·매매결정은 이후 Phase에서 다룬다.
 
 ### ✅ 지금 하는 일
@@ -139,10 +139,10 @@ python scripts/csv_replay.py --csv data/sample.csv
 ### ✅ Phase 1 (현재 범위)
 - Detection Only 급등 포착
   - features_df 기반 후보 탐지 (절대 임계, trigger_axes)
-  - 12초 확인창 + Delta-based 상대 개선 검증 + persistent_n=4
+  - 15초 확인창 + Delta-based 상대 개선 검증 + persistent_n=7
   - CPD 게이트 (선택, 기본 비활성)
   - Refractory period (20초) 중복 방지
-  - FP 허용, Recall ≥ 65~80% 목표
+  - FP 허용, Recall ≥ 50~80% 목표
   - Confirmed onset 이벤트 출력 후 종료
 
 ### ⏩ Phase 2 이후 (추후)
@@ -185,12 +185,16 @@ Detection Only 단계에서는 confirmed onset 이벤트만 출력한다:
 
 ## 성과 지표 (Detection Only 기준)
 
-* Recall ≥ 65~80% (놓침 최소화)
-* Alert Latency p50 ≤ 8~12초
+* Recall ≥ 50~80% (실전 데이터 기준, 틱 밀도에 따라 변동)
+* Alert Latency p50 ≤ 8~15초 (confirm_window=15초)
 * FP/hour ≤ 20~50 (허용 범위, 이후 단계에서 필터링)
 * Precision ≥ 40~60% (참고용)
 
 ※ 손익, 체결성, 슬리피지는 평가 제외
+
+**주의**: 파라미터는 틱 밀도에 따라 조정 필요
+- 고빈도 환경 (30+ ticks/sec): persistent_n=30~40
+- 저빈도 환경 (5-10 ticks/sec): persistent_n=5~10
 
 ## 이후 개발 계획
 

@@ -40,17 +40,10 @@ class ConfirmDetector:
         self.pre_window_s = getattr(self.config.confirm, 'pre_window_s', 5)
 
         # Delta thresholds
-        delta_config = getattr(self.config.confirm, 'delta', {})
-        if hasattr(delta_config, 'ret_min'):
-            # Pydantic model
-            self.delta_ret_min = delta_config.ret_min
-            self.delta_zvol_min = delta_config.zvol_min
-            self.delta_spread_drop = delta_config.spread_drop
-        else:
-            # Dict
-            self.delta_ret_min = delta_config.get('ret_min', 0.0005)
-            self.delta_zvol_min = delta_config.get('zvol_min', 0.5)
-            self.delta_spread_drop = delta_config.get('spread_drop', 0.0005)
+        delta_config = self.config.confirm.delta
+        self.delta_ret_min = delta_config.ret_min
+        self.delta_zvol_min = delta_config.zvol_min
+        self.delta_spread_drop = delta_config.spread_drop
 
     def confirm_candidates(
         self,
@@ -85,6 +78,12 @@ class ConfirmDetector:
             candidate_ts = candidate['ts']
             stock_code = candidate['stock_code']
 
+            # Normalize stock_code for comparison (handle '23790.0' vs 23790 mismatch)
+            try:
+                stock_code_normalized = int(float(stock_code))
+            except (ValueError, TypeError):
+                stock_code_normalized = stock_code
+
             # Convert candidate timestamp to datetime for comparison
             if isinstance(candidate_ts, (int, float)):
                 # Check if timestamp is in seconds or milliseconds
@@ -99,12 +98,6 @@ class ConfirmDetector:
             pre_window_start = candidate_dt - pd.Timedelta(seconds=self.pre_window_s)
             pre_window_end = candidate_dt - pd.Timedelta(milliseconds=1)
 
-            pre_window_features = features_df[
-                (features_df['ts'] > pre_window_start) &
-                (features_df['ts'] <= pre_window_end) &
-                (features_df['stock_code'].astype(str) == str(stock_code))
-            ]
-
             # Extract confirmation window (after candidate)
             if self.exclude_cand_point:
                 window_start = candidate_dt + pd.Timedelta(milliseconds=1)
@@ -112,11 +105,36 @@ class ConfirmDetector:
                 window_start = candidate_dt
             window_end = candidate_dt + pd.Timedelta(seconds=self.window_s)
 
-            window_features = features_df[
-                (features_df['ts'] > window_start) &
-                (features_df['ts'] <= window_end) &
-                (features_df['stock_code'].astype(str) == str(stock_code))
-            ]
+            # Handle both datetime and numeric timestamps in features_df
+            if pd.api.types.is_datetime64_any_dtype(features_df['ts']):
+                # Compare directly with datetime
+                pre_window_features = features_df[
+                    (features_df['ts'] > pre_window_start) &
+                    (features_df['ts'] <= pre_window_end) &
+                    (features_df['stock_code'] == stock_code_normalized)
+                ]
+                window_features = features_df[
+                    (features_df['ts'] > window_start) &
+                    (features_df['ts'] <= window_end) &
+                    (features_df['stock_code'] == stock_code_normalized)
+                ]
+            else:
+                # Convert Timestamp to milliseconds for comparison with numeric ts
+                pre_window_start_ms = int(pre_window_start.timestamp() * 1000)
+                pre_window_end_ms = int(pre_window_end.timestamp() * 1000)
+                window_start_ms = int(window_start.timestamp() * 1000)
+                window_end_ms = int(window_end.timestamp() * 1000)
+
+                pre_window_features = features_df[
+                    (features_df['ts'] > pre_window_start_ms) &
+                    (features_df['ts'] <= pre_window_end_ms) &
+                    (features_df['stock_code'] == stock_code_normalized)
+                ]
+                window_features = features_df[
+                    (features_df['ts'] > window_start_ms) &
+                    (features_df['ts'] <= window_end_ms) &
+                    (features_df['stock_code'] == stock_code_normalized)
+                ]
 
             if window_features.empty or pre_window_features.empty:
                 continue
@@ -433,6 +451,12 @@ class ConfirmDetector:
             candidate_ts = candidate['ts']
             stock_code = candidate['stock_code']
 
+            # Normalize stock_code for comparison (handle '23790.0' vs 23790 mismatch)
+            try:
+                stock_code_normalized = int(float(stock_code))
+            except (ValueError, TypeError):
+                stock_code_normalized = stock_code
+
             # Convert candidate timestamp to datetime
             if isinstance(candidate_ts, (int, float)):
                 # Check if timestamp is in seconds or milliseconds
@@ -453,17 +477,35 @@ class ConfirmDetector:
                 window_start = candidate_dt
             window_end = candidate_dt + pd.Timedelta(seconds=self.window_s)
 
-            pre_window_features = features_df[
-                (features_df['ts'] > pre_window_start) &
-                (features_df['ts'] <= pre_window_end) &
-                (features_df['stock_code'].astype(str) == str(stock_code))
-            ]
+            # Handle both datetime and numeric timestamps
+            if pd.api.types.is_datetime64_any_dtype(features_df['ts']):
+                pre_window_features = features_df[
+                    (features_df['ts'] > pre_window_start) &
+                    (features_df['ts'] <= pre_window_end) &
+                    (features_df['stock_code'] == stock_code_normalized)
+                ]
+                window_features = features_df[
+                    (features_df['ts'] > window_start) &
+                    (features_df['ts'] <= window_end) &
+                    (features_df['stock_code'] == stock_code_normalized)
+                ]
+            else:
+                # Convert to milliseconds for comparison
+                pre_window_start_ms = int(pre_window_start.timestamp() * 1000)
+                pre_window_end_ms = int(pre_window_end.timestamp() * 1000)
+                window_start_ms = int(window_start.timestamp() * 1000)
+                window_end_ms = int(window_end.timestamp() * 1000)
 
-            window_features = features_df[
-                (features_df['ts'] > window_start) &
-                (features_df['ts'] <= window_end) &
-                (features_df['stock_code'].astype(str) == str(stock_code))
-            ]
+                pre_window_features = features_df[
+                    (features_df['ts'] > pre_window_start_ms) &
+                    (features_df['ts'] <= pre_window_end_ms) &
+                    (features_df['stock_code'] == stock_code_normalized)
+                ]
+                window_features = features_df[
+                    (features_df['ts'] > window_start_ms) &
+                    (features_df['ts'] <= window_end_ms) &
+                    (features_df['stock_code'] == stock_code_normalized)
+                ]
 
             if not window_features.empty and not pre_window_features.empty:
                 window_sizes.append(len(window_features))
@@ -562,8 +604,9 @@ if __name__ == "__main__":
     print("=" * 40)
 
     # Create sample data with strong signals
+    base_ts = pd.Timestamp('2024-01-01 09:00:00', tz='Asia/Seoul')
     sample_data = {
-        'ts': [1704067200000 + i * 1000 for i in range(40)],
+        'ts': [(base_ts + pd.Timedelta(seconds=i)).value // 1_000_000 for i in range(40)],  # ms epoch (value is in ns)
         'stock_code': ['005930'] * 40,
         'price': [74000 + i * 100 for i in range(40)],  # Strong upward trend
         'volume': [1000 + i * 200 + np.random.randint(-50, 101) for i in range(40)],

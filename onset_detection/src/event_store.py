@@ -332,7 +332,12 @@ def create_event(
 
     # Convert to milliseconds for consistency
     if isinstance(timestamp, (int, float)):
-        timestamp = int(timestamp * 1000)
+        # Assume timestamps > 1e12 are already in milliseconds (after year 2001)
+        # Otherwise assume seconds and convert
+        if timestamp < 1e12:
+            timestamp = int(timestamp * 1000)
+        else:
+            timestamp = int(timestamp)
 
     event = {
         'ts': timestamp,

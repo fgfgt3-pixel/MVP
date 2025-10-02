@@ -48,13 +48,31 @@ class VolumeConfig(BaseModel):
     roll_window_s: int = Field(default=300)
 
 
+class SpeedConfig(BaseModel):
+    """Speed axis configuration."""
+    ret_1s_threshold: float = Field(default=0.001)
+
+
+class ParticipationConfig(BaseModel):
+    """Participation axis configuration."""
+    z_vol_threshold: float = Field(default=1.8)
+
+
+class FrictionConfig(BaseModel):
+    """Friction axis configuration."""
+    spread_narrowing_pct: float = Field(default=0.8)
+
+
 class OnsetConfig(BaseModel):
     """Onset detection configuration model."""
-    refractory_s: int = Field(default=120)
-    confirm_window_s: int = Field(default=20)
+    refractory_s: int = Field(default=20)
+    confirm_window_s: int = Field(default=12)
     score_threshold: float = Field(default=2.0)
     weights: WeightsConfig = Field(default_factory=WeightsConfig)
     thresholds: ThresholdsConfig = Field(default_factory=ThresholdsConfig)
+    speed: SpeedConfig = Field(default_factory=SpeedConfig)
+    participation: ParticipationConfig = Field(default_factory=ParticipationConfig)
+    friction: FrictionConfig = Field(default_factory=FrictionConfig)
 
 
 class FeaturesConfig(BaseModel):
@@ -96,6 +114,7 @@ class DetectionConfig(BaseModel):
     score_threshold: float = Field(default=2.0)
     vol_z_min: float = Field(default=2.0)
     ticks_min: int = Field(default=2)
+    min_axes_required: int = Field(default=2)
     weights: Dict[str, float] = Field(default_factory=lambda: {
         "ret": 1.0,
         "accel": 1.0,
@@ -104,19 +123,29 @@ class DetectionConfig(BaseModel):
     })
 
 
+class ConfirmDeltaConfig(BaseModel):
+    """Confirmation delta thresholds."""
+    ret_min: float = Field(default=0.001)
+    zvol_min: float = Field(default=0.5)
+    spread_drop: float = Field(default=0.001)
+
+
 class ConfirmConfig(BaseModel):
     """Confirmation configuration."""
-    window_s: int = Field(default=18)
+    window_s: int = Field(default=15)
     min_axes: int = Field(default=1)
     vol_z_min: float = Field(default=1.0)
     spread_max: float = Field(default=0.03)
-    persistent_n: int = Field(default=2)
+    persistent_n: int = Field(default=7)
     exclude_cand_point: bool = Field(default=True)
+    require_price_axis: bool = Field(default=True)
+    pre_window_s: int = Field(default=5)
+    delta: ConfirmDeltaConfig = Field(default_factory=ConfirmDeltaConfig)
 
 
 class RefractoryConfig(BaseModel):
     """Refractory configuration."""
-    duration_s: int = Field(default=120)
+    duration_s: int = Field(default=20)
     extend_on_confirm: bool = Field(default=True)
 
 

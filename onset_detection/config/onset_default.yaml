@@ -29,11 +29,11 @@ onset:
 
   # Detection Only absolute thresholds
   speed:
-    ret_1s_threshold: 0.0008      # Minimum 1s return for speed axis
+    ret_1s_threshold: 0.001       # Minimum 1s return for speed axis (0.1%, 데이터 스케일 반영)
   participation:
-    z_vol_threshold: 2.0          # Minimum volume z-score for participation axis
+    z_vol_threshold: 1.8          # Minimum volume z-score for participation axis (더 관대하게, 평균 1.55 고려)
   friction:
-    spread_narrowing_pct: 0.75    # Spread narrowing percentage threshold
+    spread_narrowing_pct: 0.8     # Spread narrowing percentage threshold (더 관대하게)
 
 # Feature computation windows (seconds)
 features:
@@ -81,7 +81,7 @@ detection:
   score_threshold: 2.0
   vol_z_min: 2.0
   ticks_min: 2
-  min_axes_required: 2  # Minimum number of trigger_axes required for candidate
+  min_axes_required: 2  # Minimum number of trigger_axes required for candidate (FP 감소)
   weights:
     ret: 1.0
     accel: 1.0
@@ -90,11 +90,11 @@ detection:
 
 # Confirmation settings
 confirm:
-  window_s: 12        # Confirmation window length (seconds) after candidate - Detection Only
-  min_axes: 2         # Minimum number of axes that must be satisfied (price is mandatory)
+  window_s: 15        # Confirmation window length (seconds) after candidate - 확인 윈도우 확장 (초당 7틱 환경)
+  min_axes: 2         # Minimum number of axes that must be satisfied (2축 필수, FP 감소)
   vol_z_min: 1.0      # Volume z-score threshold for confirmation (legacy, kept for compatibility)
   spread_max: 0.03    # Maximum spread threshold (legacy, kept for compatibility)
-  persistent_n: 4     # Minimum consecutive ticks that must satisfy conditions - Detection Only (relaxed for Recall)
+  persistent_n: 10    # Minimum consecutive ticks that must satisfy conditions (1초분, 데이터 기반)
   exclude_cand_point: true  # Exclude candidate point from confirmation window
 
   # Delta-based relative improvement settings
@@ -102,9 +102,9 @@ confirm:
   pre_window_s: 5            # Pre-window length for comparison (seconds before candidate)
 
   delta:
-    ret_min: 0.0001          # Minimum relative return improvement (Pre vs Now) - relaxed
-    zvol_min: 0.1            # Minimum z_vol increase (Pre vs Now) - relaxed
-    spread_drop: 0.0001      # Minimum spread reduction (Pre vs Now) - relaxed
+    ret_min: 0.0005          # Minimum relative return improvement (0.05%, 더 낮춤)
+    zvol_min: 0.3            # Minimum z_vol increase (더 낮춤)
+    spread_drop: 0.0005      # Minimum spread reduction (더 낮춤)
 
 # Refractory settings
 refractory:

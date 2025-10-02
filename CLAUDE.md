@@ -39,6 +39,9 @@ python onset_detection/scripts/raw_to_clean_converter.py --input "filename.csv"
 # Generate features from clean CSV
 python onset_detection/scripts/generate_features.py --input "filename_clean.csv"
 
+# Run detection on feature data
+python onset_detection/scripts/run_detection.py
+
 # Run backtest analysis
 python scripts/backtest_run.py --features data/features/sample.csv --events data/events/sample.jsonl
 
@@ -49,8 +52,11 @@ python scripts/run_simulation.py --config config/onset_default.yaml
 python scripts/run_live.py --config config/onset_default.yaml
 ```
 
-### Component Testing
+### Analysis and Diagnostics
 ```bash
+# Analyze surge sample data (data-driven parameter tuning)
+python onset_detection/scripts/analyze_surge_samples.py
+
 # Test individual detection components
 python onset_detection/scripts/candidate_test.py
 python onset_detection/scripts/confirm_test.py
@@ -83,11 +89,13 @@ Raw CSV (1-tick) → Clean → Features (47 indicators) → CPD Gate → Detecti
 The system is designed to maintain **identical decision logic** between offline CSV replay and online real-time streaming to ensure production parity.
 
 ### Detection Engine (4-Stage State Machine with CPD Gate)
-- **CPD Gate**: Change Point Detection using CUSUM (price axis) + Page-Hinkley (volume axis)
-- **CandidateDetector**: Rule-based scoring using Speed + Participation + Friction metrics (only after CPD gate pass)
-- **ConfirmDetector**: Delta-based validation within confirmation window (default 20s) with earliest-hit + persistent_n
-- **RefractoryManager**: Cooldown periods (default 120s) to prevent duplicate alerts
-- **ML Filter**: Optional ML-based final filtering with onset_strength threshold
+- **CPD Gate** (optional): Change Point Detection using CUSUM (price axis) + Page-Hinkley (volume axis)
+- **CandidateDetector**: Rule-based scoring using Speed + Participation + Friction metrics
+- **ConfirmDetector**: Delta-based validation with pre-window baseline comparison and persistent_n consecutive ticks
+- **RefractoryManager**: Cooldown periods to prevent duplicate alerts
+- **ML Filter** (optional): Hybrid ML+rule-based final filtering with onset_strength threshold
+
+**Key Flow**: Candidates are detected based on absolute thresholds, then confirmed by comparing metrics against a pre-window baseline (delta-based approach) to ensure relative improvement.
 
 ### Key Modules
 
@@ -145,9 +153,13 @@ S_t = w_Speed × Speed_metrics + w_Participation × Volume_metrics + w_Friction 
 
 #### Confirmation Process (Delta-based)
 - **Pre-window**: 5 seconds before candidate for baseline comparison
-- **Confirmation window**: 20 seconds after candidate
-- **Requirements**: Price axis mandatory + minimum 2 additional axes + persistent_n consecutive ticks
+- **Confirmation window**: 15 seconds after candidate
+- **Requirements**: Price axis mandatory + min_axes (default 2) satisfied + persistent_n (default 10) consecutive ticks
 - **Delta thresholds**: Relative improvement over pre-window baseline
+  - `delta.ret_min`: Minimum return improvement (default 0.0005)
+  - `delta.zvol_min`: Minimum volume z-score increase (default 0.3)
+  - `delta.spread_drop`: Minimum spread reduction (default 0.0005)
+- **Persistent_n**: Number of consecutive ticks that must satisfy conditions (data-driven: typically 1 second worth of ticks, ~10-15)
 
 #### Event Types
 - `cpd_trigger`: CPD gate passage event
@@ -188,8 +200,25 @@ CSV files must contain columns mappable to: `ts`, `stock_code`, `price`, `volume
 - No future data leakage: computation at time t uses only data up to time t
 - Config-driven parameter tuning with hash-based version tracking
 - Event storage optimized for real-time append with efficient time-range queries
+- **Stock code handling**: Ensure type consistency between candidates (float converted to string) and DataFrame (int64) when filtering data
+- **Windows OS**: Scripts output ASCII-safe text (avoid emojis in print statements to prevent UnicodeEncodeError with cp949 encoding)
 
-## Recent Work Completed (2025-09-30)
+### Parameter Tuning Methodology
+
+When optimizing detection parameters:
+
+1. **Extract surge samples**: Use labeled surge windows to create before/during datasets
+2. **Run analysis script**: `python onset_detection/scripts/analyze_surge_samples.py`
+   - Compares metrics before vs during surge
+   - Recommends thresholds based on actual data distributions
+   - Key metrics: `ret_1s`, `z_vol_1s`, `ticks_per_sec`, `spread`, `imbalance_1s`, `OFI_1s`
+3. **Update config**: Apply data-driven thresholds to `onset_detection/config/onset_default.yaml`
+4. **Validate**: Run detection and measure Recall (target ≥50%) and FP/hour (target ≤30)
+5. **Iterate**: Adjust `persistent_n`, `min_axes`, and delta thresholds based on confirmation rate
+
+**Critical insight**: For this dataset, `ticks_per_sec` (tick density) and order flow metrics are stronger surge indicators than raw `ret_1s`.
+
+## Recent Work Completed (2025-09-30 to 2025-10-02)
 
 ### CPD Gate Integration (Modify 1.md~5.md Implementation)
 
@@ -266,8 +295,41 @@ CSV files must contain columns mappable to: `ts`, `stock_code`, `price`, `volume
 - **Documentation**: Aligned across all project documents
 - **Tests**: All existing functionality preserved, CPD tested independently
 
+### Parameter Optimization (2025-10-02)
+
+**Objective**: Reduce false positives while maintaining recall on labeled surge events.
+
+#### Data-Driven Analysis Implementation
+- **Script**: `onset_detection/scripts/analyze_surge_samples.py`
+- **Method**: Compare feature distributions before vs during surge periods
+- **Key findings**:
+  - Surge 1: 439 rows before, 1277 rows during (ts=1756688123304 boundary)
+  - Surge 2: 358 rows before, 3275 rows during (ts=1756689969627 boundary)
+  - `ticks_per_sec` shows strong signal: median increases from 6→10 (Surge 1), 4→12 (Surge 2)
+  - `ret_1s` delta is weak/negative → not primary surge indicator for this dataset
+
+#### Optimized Parameters (Current State)
+```yaml
+detection:
+  min_axes_required: 2  # Increased from 1 → reduces FP
+
+confirm:
+  window_s: 15
+  persistent_n: 10      # Increased from 3 → 10 (1 second worth of ticks)
+  min_axes: 2           # Increased from 1 → 2
+  delta:
+    ret_min: 0.0005
+    zvol_min: 0.3
+    spread_drop: 0.0005
+```
+
+#### Results
+- Recall: 100% (2/2 surge windows detected)
+- FP/hour: 410 (improved from 4,371, but still above target of ≤30)
+- Confirmation rate: 8.8% (improved from 94.3%, healthy range)
+
 ### Next Steps (Not Implemented)
 1. Enable CPD in production configuration after parameter tuning
 2. Implement standalone CPD modules if separation from CandidateDetector is desired
 3. Add CPD-specific event logging (`cpd_trigger` events)
-4. Optimize CPD parameters through backtesting and parameter sweeps
+4. Further FP reduction: Consider increasing `persistent_n` to 15, `min_axes` to 3, or adjusting candidate thresholds

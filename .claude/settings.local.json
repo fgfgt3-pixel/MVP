@@ -6,7 +6,19 @@
       "Bash(find:*)",
       "Bash(code --version)",
       "Bash(code:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(cmd.exe:*)",
+      "Bash(pytest:*)",
+      "Read(//d/OneDrive - HKNC/D drive/Data cleansing/cleaned/**)",
+      "Bash(tasklist)",
+      "Bash(findstr:*)",
+      "Bash(while true)",
+      "Bash(do)",
+      "Bash(if grep -q \"Pipeline complete\" /d/MVP/onset_detection/logs/final_fixed_ret1s.log)",
+      "Bash(then)",
+      "Bash(break)",
+      "Bash(fi)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

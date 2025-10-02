@@ -5,8 +5,8 @@ import json
 import pytest
 import pandas as pd
 
-from onset_detection.src.detection.onset_pipeline import OnsetPipelineDF
-from onset_detection.src.config_loader import load_config
+from src.detection.onset_pipeline import OnsetPipelineDF
+from src.config_loader import load_config
 
 
 class TestStreamingMode:

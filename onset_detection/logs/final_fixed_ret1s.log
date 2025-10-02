@@ -1,0 +1,18 @@
+2025-10-01 16:23:10,009 - __main__ - INFO - Loading config from: onset_detection/config/onset_default.yaml
+2025-10-01 16:23:10,009 - __main__ - INFO - Initializing onset detection pipeline
+2025-10-01 16:23:10,024 - __main__ - INFO - Loading data from: onset_detection\data\features\023790_features_fixed_ret1s.csv
+2025-10-01 16:23:10,363 - __main__ - INFO - Loaded 58810 rows from onset_detection\data\features\023790_features_fixed_ret1s.csv
+2025-10-01 16:23:10,363 - __main__ - INFO - Running detection pipeline (batch mode)
+2025-10-01 16:23:10,363 - src.detection.onset_pipeline - INFO - Running onset pipeline on 58810 feature rows
+2025-10-01 16:23:12,124 - src.detection.onset_pipeline - INFO - Detected 23087 candidates
+2025-10-01 16:23:12,136 - src.detection.onset_pipeline - INFO - After refractory filter: 23087 allowed, 0 rejected
+2025-10-01 16:34:02,904 - src.detection.onset_pipeline - INFO - Confirmed 0 onsets
+2025-10-01 16:34:02,904 - __main__ - INFO - Pipeline complete: 0 alerts generated
+2025-10-01 16:34:02,909 - __main__ - INFO - Saved 0 alerts to onset_detection\data\events\final_with_fixed_ret1s.jsonl
+2025-10-01 16:34:02,909 - __main__ - INFO - ==================================================
+2025-10-01 16:34:02,910 - __main__ - INFO - Pipeline Statistics:
+2025-10-01 16:34:02,910 - __main__ - INFO -   candidates_detected: 23087
+2025-10-01 16:34:02,910 - __main__ - INFO -   rejected_refractory: 0
+2025-10-01 16:34:02,910 - __main__ - INFO -   onsets_confirmed: 0
+2025-10-01 16:34:02,910 - __main__ - INFO -   alerts_output: 0
+2025-10-01 16:34:02,910 - __main__ - INFO - ==================================================
