@@ -21,7 +21,8 @@
       "Bash(done)",
       "Bash(git check-ignore:*)",
       "Bash(cat:*)",
-      "Bash(iconv:*)"
+      "Bash(iconv:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
