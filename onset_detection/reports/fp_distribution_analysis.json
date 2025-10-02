@@ -1,0 +1,30 @@
+{
+  "total_confirmed": 331,
+  "true_positives": 23,
+  "false_positives": 308,
+  "fp_rate": 0.9305135951661632,
+  "fp_by_hour": {
+    "9": 123,
+    "10": 50,
+    "11": 18,
+    "12": 91,
+    "13": 26
+  },
+  "fp_morning": 191,
+  "fp_afternoon": 117,
+  "axes_distribution": {
+    "price": 226,
+    "volume": 254,
+    "friction": 260
+  },
+  "onset_strength_stats": {
+    "mean": 0.8008658008658008,
+    "median": 0.6666666666666666,
+    "p25": 0.6666666666666666
+  },
+  "clusters": {
+    "total": 13,
+    "avg_size": 23.692307692307693,
+    "large_clusters": 9
+  }
+}

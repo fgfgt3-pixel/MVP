@@ -1,0 +1,81 @@
+{
+  "023790": [
+    {
+      "surge": "Surge1",
+      "strength": "중간",
+      "detected": true,
+      "detection_time_kst": "09:55:14.547",
+      "latency_from_start": -8.757,
+      "latency_to_peak": 188.757,
+      "detection_position_pct": -4.865,
+      "quality": "Excellent (<5s)",
+      "alert_count": 4
+    },
+    {
+      "surge": "Surge2",
+      "strength": "중간",
+      "detected": true,
+      "detection_time_kst": "10:26:18.648",
+      "latency_from_start": 9.021,
+      "latency_to_peak": 170.979,
+      "detection_position_pct": 5.011666666666667,
+      "quality": "Good (5-15s)",
+      "alert_count": 1
+    }
+  ],
+  "413630": [
+    {
+      "surge": "Surge1",
+      "strength": "중간",
+      "detected": true,
+      "detection_time_kst": "09:11:33.059",
+      "latency_from_start": 153.059,
+      "latency_to_peak": 206.941,
+      "detection_position_pct": 42.51638888888889,
+      "quality": "Slow (>30s)",
+      "alert_count": 14
+    },
+    {
+      "surge": "Surge2",
+      "strength": "강한",
+      "detected": true,
+      "detection_time_kst": "10:02:33.457",
+      "latency_from_start": 93.457,
+      "latency_to_peak": 686.543,
+      "detection_position_pct": 11.981666666666666,
+      "quality": "Slow (>30s)",
+      "alert_count": 10
+    },
+    {
+      "surge": "Surge3",
+      "strength": "약한",
+      "detected": false,
+      "detection_time_kst": null,
+      "latency_from_start": null,
+      "latency_to_peak": null
+    },
+    {
+      "surge": "Surge4",
+      "strength": "중간",
+      "detected": false,
+      "detection_time_kst": null,
+      "latency_from_start": null,
+      "latency_to_peak": null
+    },
+    {
+      "surge": "Surge5",
+      "strength": "약한",
+      "detected": false,
+      "detection_time_kst": null,
+      "latency_from_start": null,
+      "latency_to_peak": null
+    }
+  ],
+  "summary": {
+    "total_surges": 7,
+    "detected_surges": 4,
+    "avg_latency_from_start": 61.695,
+    "median_latency_from_start": 51.239,
+    "avg_detection_position_pct": 13.661180555555557
+  }
+}

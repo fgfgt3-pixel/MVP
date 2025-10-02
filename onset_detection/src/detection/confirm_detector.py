@@ -279,6 +279,19 @@ class ConfirmDetector:
         # Calculate onset strength (ratio of satisfied axes)
         onset_strength = len(satisfied_axes) / 3.0
 
+        # Strategy C+ filter: Onset strength threshold (relaxed to 0.67)
+        # 0.67 allows 2/3 axes (medium surges), 0.70 required 3/3 axes (strong only)
+        if onset_strength < 0.67:
+            return {
+                "confirmed": False,
+                "satisfied_axes": satisfied_axes,
+                "onset_strength": onset_strength,
+                "evidence": {},
+                "confirm_ts": None,
+                "window_size": len(window_df),
+                "reason": f"onset_strength too low: {onset_strength:.3f} < 0.67"
+            }
+
         # Evidence from the confirmation row with Delta values
         evidence = {
             "ret_1s": float(confirm_row['ret_1s']),

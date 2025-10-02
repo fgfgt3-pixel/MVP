@@ -1,0 +1,117 @@
+{
+  "file": "413630",
+  "total_surges": 5,
+  "detected_surges": 2,
+  "recall": 0.4,
+  "fp_per_hour": 3.1664675310419366,
+  "total_alerts": 30,
+  "duration_hours": 9.47428,
+  "surges": [
+    {
+      "name": "Surge 1",
+      "start_time": "09:09",
+      "end_time": "09:15",
+      "strength": "중간",
+      "note": "마지막 4분 하락",
+      "start_ts": 1757549340000,
+      "end_ts": 1757549700000,
+      "window_start": 1757549310000,
+      "window_end": 1757549700000
+    },
+    {
+      "name": "Surge 2",
+      "start_time": "10:01",
+      "end_time": "10:14",
+      "strength": "강한",
+      "note": "마지막 4분 하락",
+      "start_ts": 1757552460000,
+      "end_ts": 1757553240000,
+      "window_start": 1757552430000,
+      "window_end": 1757553240000
+    },
+    {
+      "name": "Surge 3",
+      "start_time": "11:46",
+      "end_time": "11:50",
+      "strength": "약한",
+      "note": "마지막 3분 하락",
+      "start_ts": 1757558760000,
+      "end_ts": 1757559000000,
+      "window_start": 1757558730000,
+      "window_end": 1757559000000
+    },
+    {
+      "name": "Surge 4",
+      "start_time": "13:29",
+      "end_time": "13:37",
+      "strength": "중간",
+      "note": "마지막 4분 하락",
+      "start_ts": 1757564940000,
+      "end_ts": 1757565420000,
+      "window_start": 1757564910000,
+      "window_end": 1757565420000
+    },
+    {
+      "name": "Surge 5",
+      "start_time": "14:09",
+      "end_time": "14:12",
+      "strength": "약한",
+      "note": "마지막 2분 하락",
+      "start_ts": 1757567340000,
+      "end_ts": 1757567520000,
+      "window_start": 1757567310000,
+      "window_end": 1757567520000
+    }
+  ],
+  "detection_details": [
+    {
+      "surge": "Surge 1",
+      "strength": "중간",
+      "detected": true,
+      "alert_count": 14,
+      "window": "09:09 ~ 09:15"
+    },
+    {
+      "surge": "Surge 2",
+      "strength": "강한",
+      "detected": true,
+      "alert_count": 10,
+      "window": "10:01 ~ 10:14"
+    },
+    {
+      "surge": "Surge 3",
+      "strength": "약한",
+      "detected": false,
+      "alert_count": 0,
+      "window": "11:46 ~ 11:50"
+    },
+    {
+      "surge": "Surge 4",
+      "strength": "중간",
+      "detected": false,
+      "alert_count": 0,
+      "window": "13:29 ~ 13:37"
+    },
+    {
+      "surge": "Surge 5",
+      "strength": "약한",
+      "detected": false,
+      "alert_count": 0,
+      "window": "14:09 ~ 14:12"
+    }
+  ],
+  "by_strength": {
+    "강한": {
+      "total": 1,
+      "detected": 1
+    },
+    "중간": {
+      "total": 2,
+      "detected": 1
+    },
+    "약한": {
+      "total": 2,
+      "detected": 0
+    }
+  }
+}

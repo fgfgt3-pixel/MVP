@@ -1,0 +1,1 @@
+{"ts": 1756857669159, "event_type": "onset_confirmed", "stock_code": "97230.0", "confirmed_from": 1756857668398.0, "evidence": {"axes": ["price", "volume", "friction"], "onset_strength": 1.0, "ret_1s": 0.0, "z_vol_1s": 1.7770425479276266, "spread": 50.0, "microprice_slope": 0.0, "delta_ret": 0.5157265951383093, "delta_zvol": 0.29107929123915177, "delta_spread": 50.0}}

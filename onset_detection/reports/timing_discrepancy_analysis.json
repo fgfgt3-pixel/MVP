@@ -1,0 +1,98 @@
+{
+  "023790": {
+    "avg_characteristics": {
+      "ticks_per_sec": 7.205579593830693,
+      "ret_1s_p90": 0.5960106757795893,
+      "z_vol_mean": 1.4806554375563137,
+      "early_2axes_rate": 0.050398230088495574
+    },
+    "individual_surges": [
+      {
+        "duration_s": 180.0,
+        "total_ticks": 1401,
+        "price_change_pct": 4.234527687296419,
+        "ticks_per_sec_mean": 7.870786516853933,
+        "ret_1s_mean": 0.10702234937805549,
+        "ret_1s_p90": 0.6550658865268669,
+        "z_vol_mean": 1.6016320213360382,
+        "early_2axes_rate": 0.03
+      },
+      {
+        "duration_s": 180.0,
+        "total_ticks": 1053,
+        "price_change_pct": 5.3674121405750785,
+        "ticks_per_sec_mean": 6.540372670807454,
+        "ret_1s_mean": 0.12921075076481847,
+        "ret_1s_p90": 0.5369554650323117,
+        "z_vol_mean": 1.3596788537765891,
+        "early_2axes_rate": 0.07079646017699115
+      }
+    ]
+  },
+  "413630": {
+    "avg_characteristics": {
+      "ticks_per_sec": 19.078404811895854,
+      "ret_1s_p90": 0.3230975151869987,
+      "z_vol_mean": 1.566616582533991,
+      "early_2axes_rate": 0.042958323225433706
+    },
+    "individual_surges": [
+      {
+        "duration_s": 360.0,
+        "total_ticks": 8331,
+        "price_change_pct": 2.389705882352944,
+        "ticks_per_sec_mean": 23.467605633802815,
+        "ret_1s_mean": 0.02754116393575758,
+        "ret_1s_p90": 0.4173396268149057,
+        "z_vol_mean": 1.5958830445335972,
+        "early_2axes_rate": 0.048458149779735685
+      },
+      {
+        "duration_s": 780.0,
+        "total_ticks": 25617,
+        "price_change_pct": 18.47826086956521,
+        "ticks_per_sec_mean": 32.88446726572529,
+        "ret_1s_mean": 0.040881446010513384,
+        "ret_1s_p90": 0.3634850217558016,
+        "z_vol_mean": 1.4978429596591276,
+        "early_2axes_rate": 0.0525
+      },
+      {
+        "duration_s": 240.0,
+        "total_ticks": 2860,
+        "price_change_pct": 1.6591251885369473,
+        "ticks_per_sec_mean": 12.380952380952381,
+        "ret_1s_mean": 0.05349489640773777,
+        "ret_1s_p90": 0.3386946464559731,
+        "z_vol_mean": 1.5772558847035496,
+        "early_2axes_rate": 0.061452513966480445
+      },
+      {
+        "duration_s": 480.0,
+        "total_ticks": 6248,
+        "price_change_pct": 4.423380726698256,
+        "ticks_per_sec_mean": 13.350427350427351,
+        "ret_1s_mean": 0.10295488297309863,
+        "ret_1s_p90": 0.18376058486463887,
+        "z_vol_mean": 1.5717442938474082,
+        "early_2axes_rate": 0.0
+      },
+      {
+        "duration_s": 180.0,
+        "total_ticks": 2329,
+        "price_change_pct": 2.3076923076922995,
+        "ticks_per_sec_mean": 13.308571428571428,
+        "ret_1s_mean": 0.03469633462023661,
+        "ret_1s_p90": 0.31220769604367415,
+        "z_vol_mean": 1.590356729926272,
+        "early_2axes_rate": 0.05238095238095238
+      }
+    ]
+  },
+  "comparison": {
+    "ticks_ratio": 2.6477266073405796,
+    "ret_ratio": 0.5421002145043512,
+    "zvol_ratio": 1.0580561437842342,
+    "early_detection_ratio": 0.852377616237754
+  }
+}

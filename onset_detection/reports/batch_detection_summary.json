@@ -1,0 +1,82 @@
+{
+  "files": [
+    {
+      "file": "023790_44indicators_realtime_20250901_clean.csv",
+      "confirmed": 100,
+      "fp_per_hour": 20.090193808983553,
+      "duration_hours": 4.9775527777777775
+    },
+    {
+      "file": "023790_44indicators_realtime_20250902_clean.csv",
+      "confirmed": 61,
+      "fp_per_hour": 9.425282659763262,
+      "duration_hours": 6.471954444444444
+    },
+    {
+      "file": "049470_44indicators_realtime_20250903_clean.csv",
+      "confirmed": 0,
+      "fp_per_hour": 0.0,
+      "duration_hours": 6.915758333333334
+    },
+    {
+      "file": "054540_44indicators_realtime_20250901_clean.csv",
+      "confirmed": 61,
+      "fp_per_hour": 12.243208322705547,
+      "duration_hours": 4.982354166666667
+    },
+    {
+      "file": "054540_44indicators_realtime_20250902_clean.csv",
+      "confirmed": 13,
+      "fp_per_hour": 2.0093663089808587,
+      "duration_hours": 6.469701388888889
+    },
+    {
+      "file": "054540_44indicators_realtime_20250903_clean.csv",
+      "confirmed": 2,
+      "fp_per_hour": 0.2878052479448207,
+      "duration_hours": 6.949143611111111
+    },
+    {
+      "file": "097230_44indicators_realtime_20250902_clean.csv",
+      "confirmed": 1,
+      "fp_per_hour": 0.1545181824764449,
+      "duration_hours": 6.471730277777778
+    },
+    {
+      "file": "097230_44indicators_realtime_20250903_clean.csv",
+      "confirmed": 1,
+      "fp_per_hour": 0.14382151749678648,
+      "duration_hours": 6.9530625
+    },
+    {
+      "file": "208640_44indicators_realtime_20250903_clean.csv",
+      "confirmed": 0,
+      "fp_per_hour": 0.0,
+      "duration_hours": 6.919122222222223
+    },
+    {
+      "file": "355690_44indicators_realtime_20250903_clean.csv",
+      "confirmed": 0,
+      "fp_per_hour": 0.0,
+      "duration_hours": 6.802834166666667
+    },
+    {
+      "file": "362320_44indicators_realtime_20250901_clean.csv",
+      "confirmed": 24,
+      "fp_per_hour": 4.820927646915259,
+      "duration_hours": 4.978295
+    },
+    {
+      "file": "413630_44indicators_realtime_20250911_clean.csv",
+      "confirmed": 30,
+      "fp_per_hour": 3.1664675310419366,
+      "duration_hours": 9.47428
+    }
+  ],
+  "summary": {
+    "total_files": 12,
+    "total_confirmed": 293,
+    "total_hours": 78.36578888888889,
+    "avg_fp_per_hour": 3.7388764173028455
+  }
+}

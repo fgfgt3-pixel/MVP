@@ -35,13 +35,13 @@ class CandidateDetector:
         self.ticks_min = self.config.detection.ticks_min
         self.weights = self.config.detection.weights
 
-        # Detection Only: Absolute thresholds (hardcoded for now)
+        # Detection Only: Absolute thresholds (from config)
         self.absolute_thresholds = {
-            "ret_1s": 0.0008,
-            "z_vol": 1.8,
-            "spread_narrowing_pct": 0.75
+            "ret_1s": self.config.onset.speed.ret_1s_threshold,
+            "z_vol": self.config.onset.participation.z_vol_threshold,
+            "spread_narrowing_pct": self.config.onset.friction.spread_narrowing_pct
         }
-        self.min_axes_required = 2
+        self.min_axes_required = self.config.detection.min_axes_required
 
         # ===== CPD 게이트 설정/상태 (인라인) =====
         self._cpd_use = self.config.cpd.use

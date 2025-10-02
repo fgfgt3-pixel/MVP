@@ -1,0 +1,75 @@
+{
+  "phase": "Phase 1",
+  "status": "COMPLETE",
+  "completion_date": "2025-10-02 13:10:03",
+  "strategy": "Strategy C+ (Composite)",
+  "config_backup": "onset_detection\\config\\onset_phase1_final.yaml",
+  "performance": {
+    "023790_sharp": {
+      "recall": 1.0,
+      "fp_per_hour": 20.1,
+      "latency_avg_s": 0.1,
+      "latency_range_s": "-8.8 to +9.0",
+      "surge_type": "Sharp (중간 급등 x2)"
+    },
+    "413630_gradual": {
+      "recall_overall": 0.4,
+      "recall_medium_plus": 0.67,
+      "fp_per_hour": 3.2,
+      "latency_avg_s": 123.3,
+      "latency_range_s": "+93.5 to +153.1",
+      "surge_type": "Gradual (강한 x1, 중간 x2, 약한 x2)"
+    },
+    "combined_by_strength": {
+      "strong": {
+        "recall": 1.0,
+        "detected": 1,
+        "total": 1
+      },
+      "medium": {
+        "recall": 0.75,
+        "detected": 3,
+        "total": 4
+      },
+      "weak": {
+        "recall": 0.0,
+        "detected": 0,
+        "total": 2
+      }
+    }
+  },
+  "key_parameters": {
+    "refractory_duration_s": 45,
+    "persistent_n": 22,
+    "onset_strength_threshold": 0.67,
+    "min_axes_required": 2,
+    "ret_1s_threshold": 0.002,
+    "z_vol_threshold": 2.5,
+    "spread_narrowing_pct": 0.6,
+    "confirm_window_s": 15,
+    "pre_window_s": 5,
+    "cpd_enabled": false
+  },
+  "key_findings": {
+    "surge_types": {
+      "sharp": {
+        "description": "High ret_1s (P90: 0.596), fast detection (0.1s avg)",
+        "example": "023790",
+        "detection_quality": "Excellent"
+      },
+      "gradual": {
+        "description": "Low ret_1s (P90: 0.323), slow detection (123.3s avg)",
+        "example": "413630",
+        "detection_quality": "Delayed, requires Phase 2 optimization"
+      }
+    },
+    "critical_insight": "ret_1s differs 2x between Sharp (0.596) and Gradual (0.323) surge types. Single threshold cannot handle both.",
+    "trade_off": "Optimized for Sharp surges with medium+ recall 75%. Gradual surge optimization deferred to Phase 2 dual-strategy system."
+  },
+  "phase2_requirements": {
+    "dual_strategy": "Separate thresholds for Sharp vs Gradual surges",
+    "adaptive_confirm": "Dynamic confirmation window based on surge speed",
+    "ml_integration": "Surge type classifier + strength predictor",
+    "target_recall": "90%+ for both Sharp and Gradual medium+ surges"
+  }
+}

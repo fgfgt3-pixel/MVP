@@ -133,9 +133,15 @@
 
 ---
 
-## Phase 1 — 온셋 탐지 엔진 v3 (CPD→Δ확인→불응, ML 필터)
+## Phase 1 — 온셋 탐지 엔진 v3 (CPD→Δ확인→불응, ML 필터) ✅ **COMPLETE**
 
 **목적**: "사람이 차트에서 느끼는 급등 시작"을 **속도/참여/마찰** 세 축으로 수치화하여 **첫 관통**을 포착.
+
+**상태**: ✅ 2025-10-02 완료
+- **Strategy C+**: 중간+ 급등 75% Recall, FP/h 20.1 (023790), 3.2 (413630)
+- **핵심 발견**: Sharp vs Gradual 두 가지 급등 유형 존재 (ret_1s 54% 차이)
+- **Phase 1 최적화 대상**: Sharp 급등 (고속 가격 변동)
+- **Phase 2 목표**: Gradual 급등 대응 Dual-Strategy 시스템
 
 * **입력 구조**: CSV/JSONL 기반 DataFrame (배치 처리)
 * **파이프라인**: `OnsetPipelineDF.run_batch(features_df)` → confirmed events
@@ -153,18 +159,19 @@
     - **게이트 통과 시에만** 후속 단계 진행(장초반 `min_pre_s` 확보, `cooldown_s` 적용).
     - 설정: `cpd.use: false` (기본값)
   * **(2) 후보 산출 (CandidateDetector)**: 절대 임계 기반 trigger_axes 평가
-    - `ret_1s > 0.0008`, `z_vol_1s > 1.8`, `spread_narrowing < 0.75`
+    - **Phase 1 최적화 값**: `ret_1s > 0.002`, `z_vol_1s > 2.5`, `spread_narrowing < 0.6`
     - `min_axes_required: 2` (기본값)
-  * **(3) 확인 (ConfirmDetector)**: **상대 개선(Δ) 기반 + 가격 축 필수 + earliest-hit + 연속성(persistent_n)**
-    - Pre-window (5초) vs Confirm-window (12초) 비교
-    - 가격 축(필수): `delta_ret ≥ 0.0001` OR `delta_microprice_slope ≥ 0.0001`
+  * **(3) 확인 (ConfirmDetector)**: **상대 개선(Δ) 기반 + 온셋 강도 필터 + earliest-hit + 연속성(persistent_n)**
+    - Pre-window (5초) vs Confirm-window (15초) 비교
+    - 가격 축: `delta_ret ≥ 0.0001` (필수 아님, `require_price_axis: false`)
     - 거래 축: `delta_zvol ≥ 0.1`
     - 마찰 축: `delta_spread (pre - now) ≥ 0.0001`
-    - 최종 판정: 가격 축 필수 + **min_axes=2 이상**이 **연속 persistent_n=4개** 충족되는 **최초 시점(earliest-hit)**
-    - 설정: `confirm.window_s: 12`, `confirm.persistent_n: 4`, `confirm.exclude_cand_point: true`
-  * **(4) 불응(RefractoryManager)**: 20초 (Detection Only 단축)
+    - **Phase 1 핵심 필터**: `onset_strength ≥ 0.67` (2/3 축 이상 충족)
+    - 최종 판정: **min_axes=2 이상**이 **연속 persistent_n=22개** 충족되는 **최초 시점(earliest-hit)**
+    - 설정: `confirm.window_s: 15`, `confirm.persistent_n: 22`, `confirm.exclude_cand_point: true`
+  * **(4) 불응(RefractoryManager)**: 45초 (Phase 1 최적화)
     - 종목별(stock_code) 관리
-    - 설정: `refractory.duration_s: 20`, `refractory.extend_on_confirm: true`
+    - 설정: `refractory.duration_s: 45`, `refractory.extend_on_confirm: true`
   * **확장(옵션) — 온셋 구간(시작→Peak) 세그먼터**: confirm 시점부터 시작하며, (i) 롤링 고점이 더 이상 갱신되지 않거나, (ii) 고점대비 드로다운 ≥ *dd_stop_pct* (예: 0.8–1.5%), (iii) 거래/마찰이 평시로 복귀(z_vol↓, spread↑) 중 먼저 오는 조건에서 **종료**(안전장치 *max_hold_s* 적용).
   * **이벤트 단계 타입 표준**: `onset_candidate` → `onset_confirm_inprogress` → `onset_confirmed` → `refractory_enter/exit` (시각화·리포팅 동일 키 사용).
 * **산출물**
@@ -178,9 +185,25 @@
     - **단계별 레이어(옵션)**: candidate=연한색, confirm in-progress=중간 명도, confirmed=진한색; 하단 **Event Timeline** 보조 패널 추가 가능.
     - **디버그 라벨(옵션)**: 마커 옆에 `S_t`/증거 타입(`[price|vol|microprice]`) 표기.
     - 산출 경로: `reports/plots/<종목>_<날짜>_onset.png` (또는 HTML), 스크립트: `scripts/step05_plot_onset.py`.
-* **확정 아님**
+* **Phase 1 최종 성과**
 
-  * **가중치/임계/윈도우/CPD 파라미터 값은 고정 아님**(Phase 3에서 스윕·랭킹으로 결정).
+  * **Config 백업**: `onset_detection/config/onset_phase1_final.yaml`
+  * **최종 보고서**: `onset_detection/reports/phase1_final_report.md`
+  * **메타데이터**: `onset_detection/reports/phase1_final_metadata.json`
+  * **결과**:
+    - Sharp 급등 (023790): Recall 100% (2/2 중간), FP/h 20.1, 지연 0.1s
+    - Gradual 급등 (413630): Recall 40% (2/5), 중간+ 67%, FP/h 3.2, 지연 123.3s
+    - **합산 중간+ Recall: 75% (3/4)** ✅ 목표(≥65%) 달성
+
+* **핵심 발견 및 제한사항**
+
+  * **두 가지 급등 유형 발견**:
+    - **Sharp**: ret_1s P90=0.596, 빠른 탐지 (0.1s), 예: 023790
+    - **Gradual**: ret_1s P90=0.323 (54% 낮음), 느린 탐지 (123.3s), 예: 413630
+  * **ret_1s 의존성**: Gradual 급등이 2.65배 더 많은 틱을 가짐에도 ret_1s는 46% 낮음
+  * **단일 임계값 한계**: ret_1s 기반 단일 전략은 두 유형 모두 처리 불가
+  * **Phase 1 최적화 대상**: Sharp 급등 중심 (중간+ 75% Recall)
+  * **Phase 2 요구사항**: Dual-Strategy 시스템으로 Gradual 급등 대응
 
 ---
 
@@ -198,9 +221,31 @@ segmenter:          # span 모드일 때만 사용
   max_hold_s: 180      # 안전장치: 구간 최대 길이(초)
 ```
 
-## Phase 2 — 실행 가능성 가드(체결성/슬리피지) + 정책 훅
+## Phase 2 — Dual-Strategy 시스템 + 실행 가능성 가드 (계획)
 
-**목적**: 알람이 떠도 **체결할 수 있어야** 의미 있음. 한국시장 특수(틱/스프레드/심도/MM) 반영.
+**목적**:
+1. **Dual-Strategy**: Sharp/Gradual 급등 유형별 적응형 탐지 전략
+2. **실행 가능성**: 체결 가능성 검증 (체결성/슬리피지)
+
+### 2-1. Dual-Strategy 시스템 (우선)
+
+* **급등 유형 분류기**
+  * ML 모델로 실시간 Sharp/Gradual 구분
+  * 입력: 초기 ticks_per_sec, ret_1s, z_vol_1s 패턴
+  * 출력: Sharp(0.7+ prob) / Gradual(0.3- prob) / Uncertain(중간)
+
+* **적응형 임계값**
+  * Sharp 급등: ret_1s=0.002 (Phase 1 최적화 값 유지)
+  * Gradual 급등: ret_1s=0.0010~0.0015 (낮은 임계값)
+  * 동적 확인 윈도우: Sharp 15s, Gradual 30-45s
+
+* **목표 성능**
+  * Sharp 급등: Recall 90%+ (현재 100% 유지)
+  * Gradual 급등: Recall 90%+ (현재 40%에서 개선)
+  * 합산 중간+ Recall: 90%+
+  * FP/h: ≤30 유지
+
+### 2-2. 실행 가능성 가드 (한국시장 특수 반영)
 
 * **체커**
 

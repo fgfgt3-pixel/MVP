@@ -1,0 +1,47 @@
+{
+  "strategy": "D",
+  "strategy_params": {
+    "refractory_s": 45,
+    "persistent_n": 22,
+    "onset_strength_min": 0.7
+  },
+  "files": {
+    "023790": {
+      "file": "023790",
+      "rows": 58810,
+      "duration_hours": 4.9775527777777775,
+      "load_time": 0.5297865867614746,
+      "pipeline_time": 5.235187768936157,
+      "candidates": 1367,
+      "confirmed": 100,
+      "alerts": 100,
+      "fp_per_hour": 20.090193808983553,
+      "recall": 1.0,
+      "surges": [
+        {
+          "name": "Surge 1",
+          "detected": true,
+          "count": 4
+        },
+        {
+          "name": "Surge 2",
+          "detected": true,
+          "count": 1
+        }
+      ]
+    },
+    "413630": {
+      "file": "413630",
+      "rows": 131720,
+      "duration_hours": 9.47428,
+      "load_time": 0.6504154205322266,
+      "pipeline_time": 11.011844635009766,
+      "candidates": 2442,
+      "confirmed": 30,
+      "alerts": 30,
+      "fp_per_hour": 3.1664675310419366,
+      "recall": null,
+      "surges": []
+    }
+  }
+}
